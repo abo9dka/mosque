@@ -1,0 +1,324 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Cairo', sans-serif;
+}
+
+/* =========================
+   DESIGN SYSTEM
+   ========================= */
+:root {
+    --primary: #0f3d2e;
+    --primary-soft: #22c55e;
+    --background: #f4f7f6;
+    --card: #ffffff;
+    --text: #1f2937;
+    --muted: #6b7280;
+    --border: #e5e7eb;
+    --shadow: rgba(0,0,0,0.08);
+}
+
+/* =========================
+   BODY (MODERN BACKGROUND)
+   ========================= */
+body {
+    background:
+        radial-gradient(circle at 15% 20%, rgba(34, 197, 94, 0.18), transparent 45%),
+        radial-gradient(circle at 85% 80%, rgba(15, 61, 46, 0.15), transparent 45%),
+        radial-gradient(circle at 50% 50%, rgba(34, 197, 94, 0.08), transparent 60%),
+        linear-gradient(180deg, #f8fafc 0%, #eef3f8 100%);
+
+    padding: 25px;
+    color: var(--text);
+    min-height: 100vh;
+}
+
+/* =========================
+   BACK BUTTON (PRO)
+   ========================= */
+.back {
+    display: inline-block;
+    margin-bottom: 15px;
+    padding: 10px 15px;
+    background: var(--card);
+    border-radius: 12px;
+    text-decoration: none;
+    color: var(--text);
+    font-weight: 700;
+    box-shadow: 0 6px 18px var(--shadow);
+    transition: all 0.3s ease;
+}
+
+.back:hover {
+    transform: translateX(-6px);
+    background: #f1f5f9;
+}
+
+/* =========================
+   HEADER (GRADIENT PRO)
+   ========================= */
+.header {
+    background: linear-gradient(135deg, var(--primary), var(--primary-soft));
+    color: white;
+    padding: 25px;
+    border-radius: 20px;
+    box-shadow: 0 10px 25px var(--shadow);
+    margin-bottom: 20px;
+}
+
+.header h2 {
+    font-weight: 800;
+    margin-bottom: 8px;
+}
+
+.header p {
+    opacity: 0.9;
+}
+
+/* =========================
+   FORM
+   ========================= */
+form {
+    background: white;
+    padding: 22px;
+    border-radius: 20px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 15px;
+}
+
+label {
+    font-weight: 700;
+    margin-bottom: 6px;
+    display: block;
+    color: var(--primary);
+    font-size: 14px;
+}
+
+input {
+    width: 100%;
+    padding: 14px 14px;
+    border-radius: 12px;
+
+    border: 2px solid #d1d5db; /* واضح أكثر */
+    background: #ffffff;       /* أبيض صريح */
+
+    outline: none;
+    font-size: 15px;
+    color: #111827;
+
+    transition: all 0.2s ease;
+
+    box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+}
+
+/* لما يضغط عليه */
+input:focus {
+    border-color: #22c55e;
+    background: #ffffff;
+    box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.15);
+}
+
+/* Placeholder واضح */
+input::placeholder {
+    color: #9ca3af;
+    font-size: 14px;
+}
+/* =========================
+   BUTTON (MODERN PRO UI)
+   ========================= */
+button {
+    width: inherit;
+    margin-top: 15px;
+    padding: 14px 18px;
+
+    border: none;
+    border-radius: 14px;
+
+    background: linear-gradient(135deg, #16a34a, #0f3d2e);
+
+    color: white;
+    font-weight: 800;
+    font-size: 16px;
+    letter-spacing: 0.5px;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 10px 25px rgba(22, 163, 74, 0.25),
+        inset 0 0 0 rgba(255,255,255,0);
+
+    transition: all 0.25s ease;
+
+    position: relative;
+    overflow: hidden;
+}
+
+/* Hover أقوى */
+button:hover {
+    transform: translateY(-3px);
+    box-shadow:
+        0 15px 35px rgba(22, 163, 74, 0.35);
+}
+
+/* Click */
+button:active {
+    transform: translateY(-1px);
+}
+
+/* ✨ Shine effect */
+button::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -80%;
+    width: 60%;
+    height: 100%;
+    background: rgba(255,255,255,0.25);
+    transform: skewX(-25deg);
+    transition: 0.6s;
+}
+
+button:hover::before {
+    left: 120%;
+}
+
+/* 🟢 Icon effect (اختياري إذا عندك أيقونة)
+button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+} */
+
+/* =========================
+   CARD
+   ========================= */
+.card {
+    background: var(--card);
+    padding: 20px;
+    border-radius: 20px;
+    box-shadow: 0 10px 25px var(--shadow);
+    border-right: 5px solid var(--primary-soft);
+}
+
+.title {
+    font-weight: 800;
+    color: var(--primary);
+    margin-bottom: 10px;
+}
+
+.badge {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 8px;
+    background: #e8f5ee;
+    color: var(--primary-soft);
+    font-size: 12px;
+    margin-top: 10px;
+}
+
+/* =========================
+   RESPONSIVE
+   ========================= */
+
+/* Small phones */
+@media (max-width: 360px) {
+
+    body {
+        padding: 10px;
+    }
+
+    .header {
+        padding: 15px;
+    }
+
+    .header h2 {
+        font-size: 16px;
+    }
+
+    .header p {
+        font-size: 12px;
+    }
+
+    .grid {
+        grid-template-columns: 1fr;
+    }
+
+    button {
+        width: 100%;
+        font-size: 13px;
+        padding: 12px;
+    }
+
+    .back {
+        width: 100%;
+        text-align: center;
+    }
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+
+    body {
+        padding: 12px;
+    }
+
+    .header {
+        text-align: center;
+    }
+    button {
+        width: 100%;
+        font-size: 13px;
+        padding: 12px;
+    }
+
+    .grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Tablets */
+@media (max-width: 768px) {
+    .grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Laptops */
+@media (max-width: 1024px) {
+    .grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Large screens */
+@media (min-width: 1280px) {
+
+    body {
+        max-width: 1200px;
+        margin: auto;
+    }
+
+    .grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+/* Touch devices */
+@media (hover: none) and (pointer: coarse) {
+
+    button, .back {
+        font-size: 15px;
+        padding: 14px;
+    }
+
+    input {
+        font-size: 16px;
+    }
+}
