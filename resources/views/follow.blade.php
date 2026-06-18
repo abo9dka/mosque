@@ -22,11 +22,13 @@
     </div>
 
     <!-- FORM -->
-    <form method="POST" action="#">
-        @csrf
+    <form action="{{ route('student.follow.store', $student->id) }}" method="POST"> @csrf
 
         <div class="grid">
-
+            <div>
+                <label>الجزء</label>
+                <input type="number" name="part_number">
+            </div>
             <div>
                 <label>السورة</label>
                 <input type="text" name="surah" placeholder="مثال: البقرة">
@@ -34,19 +36,22 @@
 
             <div>
                 <label>من آية</label>
-                <input type="number" name="ayah_from">
+                <input type="number" name="from_ayah">
             </div>
 
             <div>
                 <label>إلى آية</label>
-                <input type="number" name="ayah_to">
+                <input type="number" name=" to_ayah">
             </div>
 
             <div>
                 <label>عدد الآيات</label>
                 <input type="number" name="ayah_count">
             </div>
-
+            <div>
+                <label>العلامة</label>
+                <input type="number" name="score" placeholder="مثال: 85">
+            </div>
         </div>
 
         <button type="submit">💾 حفظ التقدم</button>
@@ -57,11 +62,38 @@
     <div class="card">
         <div class="title">📊 سجل التقدم</div>
 
-        <p style="color:#777">
-            سيتم عرض التسميعات السابقة هنا بشكل مرتب (سورة + آيات + تاريخ).
-        </p>
+        @forelse($progress as $item)
 
-        <span class="badge">جاهز للتطوير لاحقاً</span>
+        <div style="
+            background:#f8fafc;
+            padding:12px;
+            border-radius:12px;
+            margin-bottom:10px;
+            border-right:4px solid #22c55e;
+        ">
+
+            <strong>📖 {{ $item->surah }}</strong>
+            <div style="font-size:14px; color:#555; margin-top:5px;">
+                من آية {{ $item->from_ayah }}
+                إلى آية {{ $item->to_ayah }}
+            </div>
+
+            <div style="font-size:13px; color:#777; margin-top:5px;">
+                ⭐ العلامة: {{ $item->score ?? '-' }} |
+                📦 الجزء: {{ $item->part_number ?? '-' }}
+            </div>
+
+            <small style="color:#999;">
+                🕒 {{ $item->created_at->format('Y-m-d H:i') }}
+            </small>
+
+        </div>
+
+        @empty
+
+        <p style="color:#777">لا يوجد تسجيلات بعد.</p>
+
+        @endforelse
     </div>
 
 </body>
