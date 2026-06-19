@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ProgressLog;
 use App\Models\Student;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -32,9 +33,36 @@ class StudentController extends Controller
     {
         $student = Student::findOrFail($id);
 
-        return view('follow', compact('student'));
-    }
+        $progress = ProgressLog::where('student_id', $id)
+            ->orderBy('created_at', 'desc')
+            ->get();
 
+        return view('follow', compact('student', 'progress'));
+    }
+    public function storeFollow(Request $request, $id)
+    {
+        ProgressLog::create([
+            'part_number' => $request->part_number,
+            'student_id' => $id,
+            'surah_name' => $request->surah,
+            'from_ayah' => $request->from_ayah,
+            'to_ayah' => $request->to_ayah,
+            'ayah_count' => $request->ayah_count,
+            'score' => $request->score,
+        ]);
+
+        return back()->with('success', 'تم الحفظ');
+    }
+    public function showProgress($id)
+    {
+        $student = Student::findOrFail($id);
+
+        $progress = ProgressLog::where('student_id', $id)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return view('student-progress', compact('student', 'progress'));
+    }
     public function edit($id)
     {
         $student = Student::findOrFail($id);
