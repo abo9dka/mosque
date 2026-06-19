@@ -18,13 +18,17 @@ class StudentController extends Controller
     {
         $request->validate([
             'name' => 'required',
-            'phone_number' => 'nullable'
+            'phone_number' => 'nullable',
+            'grade' => 'nullable',
+            'address' => 'nullable'
         ]);
 
         Student::create([
             'user_id' => auth()->id(),
             'name' => $request->name,
-            'phone_number' => $request->phone_number
+            'phone_number' => $request->phone_number,
+            'grade' => $request->grade,
+            'address' => $request->address
         ]);
 
         return redirect()->route('dashboard');
@@ -41,17 +45,63 @@ class StudentController extends Controller
     }
     public function storeFollow(Request $request, $id)
     {
-        ProgressLog::create([
-            'part_number' => $request->part_number,
-            'student_id' => $id,
-            'surah_name' => $request->surah,
-            'from_ayah' => $request->from_ayah,
-            'to_ayah' => $request->to_ayah,
-            'ayah_count' => $request->ayah_count,
-            'score' => $request->score,
+// Validation
+        $request->validate([
+            'surah' => 'required|string|max:255',
+            'from_ayah' => 'required|integer|min:1',
+            'to_ayah' => 'required|integer',
+            'score' => 'nullable|integer|min:0|max:100',
+
+            'homework' => 'nullable|string|max:255',
+            'daily_review' => 'nullable|string|max:255',
+            'review_score' => 'nullable|integer|min:0|max:100',
+            'review_homework' => 'nullable|string|max:255',
+            'notes' => 'nullable|string',
         ]);
 
-        return back()->with('success', 'تم الحفظ');
+// Store
+        ProgressLog::create([
+            'student_id' => $id,
+            'type' => 'memorization',
+
+            'surah' => $request->surah,
+            'from_ayah' => $request->from_ayah,
+            'to_ayah' => $request->to_ayah,
+            'score' => $request->score,
+
+            'homework' => $request->homework,
+            'daily_review' => $request->daily_review,
+            'review_score' => $request->review_score,
+            'review_homework' => $request->review_homework,
+            'notes' => $request->notes,
+        ]);
+
+        return back()->with('success', '✅ تم حفظ الحفظ الجديد');
+
+    }
+
+    public function storeReview(Request $request, $id)
+    {
+
+// Validation
+        $request->validate([
+            'weekly_memorization' => 'required|string|max:255',
+            'score' => 'nullable|integer|min:0|max:10',
+            'review_homework' => 'nullable|string|max:255',
+        ]);
+
+// Store
+        ProgressLog::create([
+            'student_id' => $id,
+            'type' => 'big_review',
+
+            'weekly_memorization' => $request->weekly_memorization,
+            'score' => $request->score,
+            'review_homework' => $request->review_homework,
+        ]);
+
+        return back()->with('success', '✅ تم حفظ المراجعة الكبرى');
+
     }
     public function showProgress($id)
     {
@@ -91,4 +141,24 @@ class StudentController extends Controller
 
         return redirect()->back();
     }
+
+    public function addPoints(Request $request, $id)
+    {
+// Validate input
+        $request->validate([
+            'points' => 'required|integer|min:1'
+        ]);
+
+// Find student
+$student = Student::findOrFail($id);
+
+// Add points (increment)
+$student->points += $request->points;
+$student->save();
+
+// Redirect back with success message
+return redirect()->back()->with('success', 'تمت إضافة النقاط بنجاح');
+
+}
+
 }

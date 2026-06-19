@@ -57,10 +57,17 @@ class DashboardController extends Controller
     {
         $students = Auth::user()->students;
 
-        $today = Carbon::today()->format('Y-m-d');
+        $today = now()->toDateString();
 
-        return view('attendance', compact('students', 'today'));
+// جلب حضور اليوم لكل الطلاب
+        $attendanceLogs = AttendanceLog::whereDate('date', $today)
+            ->get()
+            ->keyBy('student_id'); // مهم جدًا
+
+        return view('attendance', compact('students', 'attendanceLogs', 'today'));
+
     }
+
 
     public function storeAttendance(Request $request)
     {

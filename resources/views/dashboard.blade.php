@@ -38,26 +38,26 @@
         <div>من خان حي على الصلاة يخون حي على الكفاح</div>
     </div>
 
-    <div class="container">
+{{--    <div class="container">--}}
 
-        <div class="stats">
-            <a href="{{ route('dashboard', ['filter' => 'all']) }}" class="stat {{ request('filter') == 'all' || !request('filter') ? 'active' : '' }}">
-                <h4>عدد الطلاب</h4>
-                <h2>{{ count($students) }}</h2>
-            </a>
-            <a href="{{ route('dashboard', ['filter' => 'حاضر']) }}" class="stat {{ request('filter') == 'حاضر' ? 'active' : '' }}">
-                <h4>الحضور اليوم</h4>
-                <h2>{{ $presentCount }}</h2>
-            </a>
-            <a href="{{ route('dashboard', ['filter' => 'غائب']) }}" class="stat {{ request('filter') == 'غائب' ? 'active' : '' }}">
-                <h4>الغياب اليوم</h4>
-                <h2>{{ $absentCount }}</h2>
-            </a>
-            <a href="{{ route('dashboard', ['filter' => 'متأخر']) }}" class="stat {{ request('filter') == 'متأخر' ? 'active' : '' }}">
-                <h4>المتأخرين اليوم</h4>
-                <h2>{{ $lateCount }}</h2>
-            </a>
-        </div>
+{{--        <div class="stats">--}}
+{{--            <a href="{{ route('dashboard', ['filter' => 'all']) }}" class="stat {{ request('filter') == 'all' || !request('filter') ? 'active' : '' }}">--}}
+{{--                <h4>عدد الطلاب</h4>--}}
+{{--                <h2>{{ count($students) }}</h2>--}}
+{{--            </a>--}}
+{{--            <a href="{{ route('dashboard', ['filter' => 'حاضر']) }}" class="stat {{ request('filter') == 'حاضر' ? 'active' : '' }}">--}}
+{{--                <h4>الحضور اليوم</h4>--}}
+{{--                <h2>{{ $presentCount }}</h2>--}}
+{{--            </a>--}}
+{{--            <a href="{{ route('dashboard', ['filter' => 'غائب']) }}" class="stat {{ request('filter') == 'غائب' ? 'active' : '' }}">--}}
+{{--                <h4>الغياب اليوم</h4>--}}
+{{--                <h2>{{ $absentCount }}</h2>--}}
+{{--            </a>--}}
+{{--            <a href="{{ route('dashboard', ['filter' => 'متأخر']) }}" class="stat {{ request('filter') == 'متأخر' ? 'active' : '' }}">--}}
+{{--                <h4>المتأخرين اليوم</h4>--}}
+{{--                <h2>{{ $lateCount }}</h2>--}}
+{{--            </a>--}}
+{{--        </div>--}}
 
         <div class="header" id="students">
             <h2>👨‍🎓 إدارة الطلاب</h2>
