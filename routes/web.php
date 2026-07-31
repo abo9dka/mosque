@@ -32,6 +32,18 @@ Route::middleware('auth')->group(function () {
         [StudentController::class, 'storeFollow']
     )
         ->name('student.follow.store');
+
+    Route::post(
+        '/student/{id}/review',
+        [StudentController::class, 'storeReview']
+    )
+        ->name('student.review.store');
+    Route::post(
+        '/student/{id}/addpoints',
+        [StudentController::class, 'addPoints']
+    )
+        ->name('students.addPoints');
+
     Route::get(
         '/student/{id}/progress',
         [StudentController::class, 'showProgress']

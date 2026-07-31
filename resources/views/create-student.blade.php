@@ -19,17 +19,20 @@
 
         body {
             min-height: 100vh;
+
             display: flex;
             justify-content: center;
             align-items: center;
 
-            /* 🎨 خلفية احترافية جديدة */
+            padding: 20px;
+
             background: radial-gradient(circle at top left, #0f3d2e, transparent 40%),
-                radial-gradient(circle at bottom right, #198754, transparent 40%),
-                linear-gradient(135deg, #0b1f17, #f4f7f6);
+            radial-gradient(circle at bottom right, #198754, transparent 40%),
+            linear-gradient(135deg, #0b1f17, #f4f7f6);
 
             position: relative;
-            overflow: hidden;
+
+            overflow-x: hidden; /* ✅ FIX */
         }
 
         /* glowing blobs */
@@ -40,6 +43,9 @@
             border-radius: 50%;
             filter: blur(80px);
             z-index: 0;
+            pointer-events: none;
+
+            max-width: 100vw; /* ✅ CRITICAL */
         }
 
         body::before {
@@ -63,7 +69,8 @@
             position: relative;
             z-index: 1;
 
-            width: 400px;
+            width: 100%;
+            max-width: 400px;
             padding: 40px;
 
             background: rgba(255, 255, 255, 0.85);
@@ -77,7 +84,10 @@
 
             animation: pop .5s ease;
         }
-
+        .box {
+            width: 100%;          /* ✅ instead of 400px */
+            max-width: 400px;     /* ✅ keeps design */
+        }
         /* TITLE */
         h2 {
             text-align: center;
@@ -135,7 +145,10 @@
             transform: translateY(-4px);
             box-shadow: 0 15px 35px rgba(25, 135, 84, 0.35);
         }
-
+        html, body {
+            max-width: 100%;
+            overflow-x: hidden;
+        }
         /* animation */
         @keyframes pop {
             from {
@@ -148,12 +161,41 @@
                 transform: scale(1);
             }
         }
+
+        .top-bar {
+            position: absolute;
+            top: 20px;
+            right: 20px; /* RTL → right side */
+            z-index: 2;
+        }
+
+        .back-btn {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
+            padding: 8px 16px;
+            border-radius: 12px;
+            text-decoration: none;
+            color: #0f3d2e;
+            font-weight: 800;
+            font-size: 14px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+            transition: all 0.25s ease;
+        }
+
+        .back-btn:hover {
+            transform: translateY(-2px);
+            background: white;
+        }
     </style>
 
 </head>
 
 <body>
-
+<div class="top-bar">
+    <a href="{{ url()->previous() }}" class="back-btn">
+        ← رجوع
+    </a>
+</div>
     <div class="box">
 
         <h2>➕ إضافة طالب</h2>
@@ -165,6 +207,10 @@
             <input type="text" name="name" placeholder="اسم الطالب" required>
 
             <input type="text" name="phone_number" placeholder="رقم الهاتف">
+
+            <input type="text" name="grade" placeholder="الصف (كرقم حصرا)">
+
+            <input type="text" name="address" placeholder="عنوان السكن">
 
             <button type="submit">💾 حفظ الطالب</button>
 
