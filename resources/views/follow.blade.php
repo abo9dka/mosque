@@ -737,7 +737,6 @@
     <div id="points" class="tab-content">
         <div class="section-card">
 
-            ```
             <div class="section-title">
                 <h3>النقاط</h3>
             </div>
@@ -766,9 +765,46 @@
                 </button>
             </form>
 
-        </div>
-        ```
+            <!-- Subtract Points Button -->
+            <button type="button" class="points-btn points-btn-subtract" onclick="openSubtractPointsModal()">
+                ➖ خصم نقاط
+            </button>
 
+        </div>
+
+    </div>
+
+    <!-- SUBTRACT POINTS MODAL -->
+    <div id="subtractPointsModal" class="modal" aria-hidden="true">
+        <div class="modal-sheet" role="dialog" aria-modal="true">
+            <div class="modal-handle"></div>
+
+            <div class="modal-head">
+                <div>
+                    <h3>خصم نقاط</h3>
+                    <div class="modal-sub">كم عدد النقاط التي تريد خصمها من الطالب؟</div>
+                </div>
+                <button type="button" class="close-btn" onclick="closeSubtractPointsModal()">✕</button>
+            </div>
+
+            <div class="modal-body">
+                <form method="POST" action="{{ route('students.subtractPoints', $student->id) }}" class="points-form">
+                    @csrf
+
+                    <input type="number"
+                           name="points"
+                           placeholder="عدد النقاط المراد خصمها..."
+                           min="1"
+                           required
+                           class="points-input"
+                           autofocus>
+
+                    <button type="submit" class="points-btn points-btn-subtract">
+                        ➖ خصم النقاط
+                    </button>
+                </form>
+            </div>
+        </div>
     </div>
 
     <style>
@@ -820,6 +856,12 @@
         .points-btn:hover {
             transform: translateY(-2px);
             filter: brightness(1.1);
+        }
+
+        .points-btn-subtract {
+            width: 100%;
+            margin-top: 12px;
+            background: linear-gradient(135deg, #9f1239, #e11d48);
         }
 
         /* Mobile */
@@ -937,6 +979,18 @@
         modal.setAttribute('aria-hidden', 'true');
     }
 
+    function openSubtractPointsModal() {
+        const modal = document.getElementById('subtractPointsModal');
+        modal.classList.add('open');
+        modal.setAttribute('aria-hidden', 'false');
+    }
+
+    function closeSubtractPointsModal() {
+        const modal = document.getElementById('subtractPointsModal');
+        modal.classList.remove('open');
+        modal.setAttribute('aria-hidden', 'true');
+    }
+
     document.addEventListener('click', function (e) {
         const btn = e.target.closest('.log-item');
         if (btn && btn.dataset.log) {
@@ -951,10 +1005,17 @@
         if (e.target.id === 'modal') {
             closeModal();
         }
+
+        if (e.target.id === 'subtractPointsModal') {
+            closeSubtractPointsModal();
+        }
     });
 
     document.addEventListener('keydown', function (e) {
-        if (e.key === 'Escape') closeModal();
+        if (e.key === 'Escape') {
+            closeModal();
+            closeSubtractPointsModal();
+        }
     });
 </script>
 

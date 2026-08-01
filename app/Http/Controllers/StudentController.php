@@ -161,4 +161,23 @@ return redirect()->back()->with('success', 'تمت إضافة النقاط بن�
 
 }
 
+    public function subtractPoints(Request $request, $id)
+    {
+// Validate input
+        $request->validate([
+            'points' => 'required|integer|min:1'
+        ]);
+
+// Find student
+$student = Student::findOrFail($id);
+
+// Subtract points (never go below zero)
+$student->points = max(0, $student->points - $request->points);
+$student->save();
+
+// Redirect back with success message
+return redirect()->back()->with('success', 'تم خصم النقاط بنجاح');
+
+}
+
 }

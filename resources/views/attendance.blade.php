@@ -95,14 +95,77 @@
             color: white;
         }
 
-        input[value="غائب"]:checked + .absent {
+        input[value="متأخر"]:checked + .late {
+            background: #d97706;
+            color: white;
+        }
+
+        .absent-toggle {
+            border: none;
+            width: auto;
+            margin-top: 0;
+        }
+
+        .absent-toggle.active {
             background: #dc2626;
             color: white;
         }
 
-        input[value="متأخر"]:checked + .late {
-            background: #d97706;
+        .row {
+            flex-wrap: wrap;
+        }
+
+        .absence-menu {
+            width: 100%;
+            margin-top: 12px;
+            padding: 12px;
+            background: #fff7f7;
+            border: 1px solid #fee2e2;
+            border-radius: var(--radius-md);
+            display: none;
+        }
+
+        .absence-menu.open {
+            display: block;
+        }
+
+        .absence-options {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 10px;
+        }
+
+        .absence-options label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            padding: 6px 10px;
+            border-radius: 8px;
+            background: #f1f5f9;
+            color: #64748b;
+        }
+
+        .absence-options label:has(input:checked) {
+            background: #dc2626;
             color: white;
+        }
+
+        .reason-input {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #ddd;
+            border-radius: var(--radius-md);
+            font-family: 'Cairo', sans-serif;
+            font-size: 14px;
+            display: none;
+        }
+
+        .reason-input.visible {
+            display: block;
         }
 
         button {
@@ -182,6 +245,8 @@
 
             @php
                 $status = $attendanceLogs[$student->id]->status ?? null;
+                $reason = $attendanceLogs[$student->id]->absence_reason ?? '';
+                $isAbsent = in_array($status, ['غياب بعذر', 'غياب بدون عذر']);
             @endphp
 
             <div class="row">
@@ -193,23 +258,55 @@
                            name="attendance[{{ $student->id }}]"
                            value="حاضر"
                            id="p{{ $student->id }}"
-                        {{ $status == 'حاضر' ? 'checked' : '' }}>
+                        {{ $status == 'حاضر' ? 'checked' : '' }}
+                           onchange="onAttendanceChange({{ $student->id }})">
                     <label class="label present" for="p{{ $student->id }}">حاضر</label>
 
-                    <input type="radio"
-                           name="attendance[{{ $student->id }}]"
-                           value="غائب"
-                           id="a{{ $student->id }}"
-                        {{ $status == 'غائب' ? 'checked' : '' }}>
-                    <label class="label absent" for="a{{ $student->id }}">غائب</label>
+                    <button type="button"
+                            class="label absent absent-toggle {{ $isAbsent ? 'active' : '' }}"
+                            id="toggle{{ $student->id }}"
+                            onclick="toggleAbsenceMenu({{ $student->id }})">
+                        غائب ▾
+                    </button>
 
                     <input type="radio"
                            name="attendance[{{ $student->id }}]"
                            value="متأخر"
                            id="l{{ $student->id }}"
-                        {{ $status == 'متأخر' ? 'checked' : '' }}>
+                        {{ $status == 'متأخر' ? 'checked' : '' }}
+                           onchange="onAttendanceChange({{ $student->id }})">
                     <label class="label late" for="l{{ $student->id }}">متأخر</label>
 
+                </div>
+
+                <div class="absence-menu {{ $isAbsent ? 'open' : '' }}" id="menu{{ $student->id }}">
+                    <div class="absence-options">
+                        <label>
+                            <input type="radio"
+                                   name="attendance[{{ $student->id }}]"
+                                   value="غياب بعذر"
+                                   id="ae{{ $student->id }}"
+                                {{ $status == 'غياب بعذر' ? 'checked' : '' }}
+                                   onchange="onAttendanceChange({{ $student->id }})">
+                            <span>غياب بعذر</span>
+                        </label>
+                        <label>
+                            <input type="radio"
+                                   name="attendance[{{ $student->id }}]"
+                                   value="غياب بدون عذر"
+                                   id="au{{ $student->id }}"
+                                {{ $status == 'غياب بدون عذر' ? 'checked' : '' }}
+                                   onchange="onAttendanceChange({{ $student->id }})">
+                            <span>غياب بدون عذر</span>
+                        </label>
+                    </div>
+
+                    <input type="text"
+                           name="absence_reason[{{ $student->id }}]"
+                           id="reason{{ $student->id }}"
+                           class="reason-input {{ $status == 'غياب بعذر' ? 'visible' : '' }}"
+                           placeholder="اذكر سبب الغياب..."
+                           value="{{ $reason }}">
                 </div>
             </div>
 
@@ -222,6 +319,32 @@
 
 
 </form>
+
+<script>
+    function toggleAbsenceMenu(id) {
+        const menu = document.getElementById('menu' + id);
+        menu.classList.toggle('open');
+    }
+
+    function onAttendanceChange(id) {
+        const excused = document.getElementById('ae' + id).checked;
+        const unexcused = document.getElementById('au' + id).checked;
+        const reasonField = document.getElementById('reason' + id);
+        const toggleBtn = document.getElementById('toggle' + id);
+        const menu = document.getElementById('menu' + id);
+
+        toggleBtn.classList.toggle('active', excused || unexcused);
+        reasonField.classList.toggle('visible', excused);
+
+        if (!excused) {
+            reasonField.value = '';
+        }
+
+        if (excused || unexcused) {
+            menu.classList.add('open');
+        }
+    }
+</script>
 
 </body>
 </html>

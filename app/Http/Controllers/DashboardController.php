@@ -21,7 +21,12 @@ class DashboardController extends Controller
         $query = Student::where('user_id', auth()->id());
 
         // تطبيق الفلترة
-        if (in_array($filter, ['حاضر', 'غائب', 'متأخر'])) {
+        if (in_array($filter, [
+            AttendanceLog::STATUS_PRESENT,
+            AttendanceLog::STATUS_EXCUSED_ABSENCE,
+            AttendanceLog::STATUS_UNEXCUSED_ABSENCE,
+            AttendanceLog::STATUS_LATE,
+        ])) {
 
             $query->whereHas('attendanceLogs', function ($q) use ($today, $filter) {
 
@@ -35,15 +40,15 @@ class DashboardController extends Controller
 
         // الإحصائيات
         $presentCount = AttendanceLog::where('date', $today)
-            ->where('status', 'حاضر')
+            ->where('status', AttendanceLog::STATUS_PRESENT)
             ->count();
 
         $absentCount = AttendanceLog::where('date', $today)
-            ->where('status', 'غائب')
+            ->whereIn('status', [AttendanceLog::STATUS_EXCUSED_ABSENCE, AttendanceLog::STATUS_UNEXCUSED_ABSENCE])
             ->count();
 
         $lateCount = AttendanceLog::where('date', $today)
-            ->where('status', 'متأخر')
+            ->where('status', AttendanceLog::STATUS_LATE)
             ->count();
 
         return view('dashboard', compact(
@@ -75,13 +80,42 @@ class DashboardController extends Controller
 
             'attendance' => 'required|array',
 
-            'attendance.*' => 'in:حاضر,غائب,متأخر',
+            'attendance.*' => 'in:' . implode(',', [
+                AttendanceLog::STATUS_PRESENT,
+                AttendanceLog::STATUS_EXCUSED_ABSENCE,
+                AttendanceLog::STATUS_UNEXCUSED_ABSENCE,
+                AttendanceLog::STATUS_LATE,
+            ]),
+
+            'absence_reason' => 'nullable|array',
+            'absence_reason.*' => 'nullable|string|max:255',
 
         ]);
 
         $today = Carbon::today()->format('Y-m-d');
 
         foreach ($request->attendance as $studentId => $status) {
+
+            $reason = $status === AttendanceLog::STATUS_EXCUSED_ABSENCE
+                ? $request->input("absence_reason.$studentId")
+                : null;
+
+            // خصم/استرجاع النقاط بالفرق بين الحالة القديمة والجديدة حتى لا نخصم مرتين عند إعادة الحفظ
+            $existing = AttendanceLog::where('student_id', $studentId)
+                ->where('date', $today)
+                ->first();
+
+            $oldPenalty = $existing ? AttendanceLog::penaltyFor($existing->status) : 0;
+            $newPenalty = AttendanceLog::penaltyFor($status);
+
+            if ($oldPenalty !== $newPenalty) {
+                $student = Student::find($studentId);
+
+                if ($student) {
+                    $student->points = max(0, $student->points + $oldPenalty - $newPenalty);
+                    $student->save();
+                }
+            }
 
             AttendanceLog::updateOrCreate(
 
@@ -93,7 +127,8 @@ class DashboardController extends Controller
                 ],
 
                 [
-                    'status' => $status
+                    'status' => $status,
+                    'absence_reason' => $reason,
 
                 ]
 

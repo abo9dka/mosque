@@ -43,6 +43,11 @@ Route::middleware('auth')->group(function () {
         [StudentController::class, 'addPoints']
     )
         ->name('students.addPoints');
+    Route::post(
+        '/student/{id}/subtractpoints',
+        [StudentController::class, 'subtractPoints']
+    )
+        ->name('students.subtractPoints');
 
     Route::get(
         '/student/{id}/progress',
