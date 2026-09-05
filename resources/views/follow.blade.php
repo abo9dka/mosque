@@ -6,99 +6,36 @@
     <title>متابعة الطالب</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link rel="stylesheet" href="{{ asset('css/theme.css') }}">
+    <link href="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/css/tom-select.css" rel="stylesheet">
 
     <style>
-        :root {
-            --bg: #f3f6fb;
-            --card: #ffffff;
-            --text: #0f172a;
-            --muted: #64748b;
-            --line: #e2e8f0;
-            --green: #16a34a;
-            --green-2: #dcfce7;
-            --blue: #2563eb;
-            --blue-2: #dbeafe;
-            --amber: #d97706;
-            --amber-2: #fef3c7;
-            --rose: #e11d48;
-            --shadow: 0 10px 30px rgba(15, 23, 42, .08);
-            --radius: 18px;
-        }
-
-        * {
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Cairo', sans-serif;
-            background: var(--bg);
-            margin: 0;
-            color: var(--text);
-            -webkit-font-smoothing: antialiased;
-            text-rendering: optimizeLegibility;
-        }
-
         .page {
-            width: 100%;
             max-width: 920px;
-            margin: 0 auto;
-            padding: 12px;
-        }
-
-        .back {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            text-decoration: none;
-            color: var(--text);
-            background: rgba(255,255,255,.85);
-            border: 1px solid var(--line);
-            padding: 10px 14px;
-            border-radius: 999px;
-            box-shadow: var(--shadow);
-            font-weight: 700;
-            margin-bottom: 12px;
-        }
-
-        .header {
-            background: linear-gradient(180deg, #ffffff 0%, #fbfdff 100%);
-            border: 1px solid var(--line);
-            padding: 14px;
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            margin-bottom: 12px;
-        }
-
-        .header h2 {
-            margin: 0 0 6px;
-            font-size: 20px;
-            line-height: 1.35;
         }
 
         .header p {
-            margin: 0;
-            color: var(--muted);
-            font-size: 14px;
-            line-height: 1.8;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--ink-muted);
+            font-size: var(--text-sm);
+            margin: 4px 0 0;
         }
 
-        .flash {
-            background: #ecfdf5;
-            border: 1px solid #bbf7d0;
-            color: #166534;
-            padding: 12px 14px;
-            border-radius: 14px;
-            margin-bottom: 12px;
-            font-weight: 600;
+        .header p i {
+            width: 14px;
+            color: var(--accent);
         }
 
         /* TABS */
         .tabs {
             display: flex;
-            gap: 10px;
+            gap: 8px;
             overflow-x: auto;
             padding-bottom: 4px;
-            margin-bottom: 12px;
+            margin-bottom: 14px;
             -webkit-overflow-scrolling: touch;
             scrollbar-width: none;
         }
@@ -108,36 +45,28 @@
         }
 
         .tab-btn {
-            min-width: 150px;
+            min-width: 140px;
             flex: 0 0 auto;
-            border: 1px solid var(--line);
-            background: rgba(255,255,255,.9);
-            color: var(--text);
-            border-radius: 14px;
-            padding: 12px 14px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--ink);
+            border-radius: var(--radius);
+            padding: 11px 14px;
             font-family: inherit;
-            font-weight: 800;
+            font-weight: 700;
+            font-size: var(--text-sm);
             cursor: pointer;
-            box-shadow: var(--shadow);
-            transition: .2s ease;
             touch-action: manipulation;
         }
 
         .tab-btn.active {
-            background: var(--green);
+            background: var(--accent);
             color: #fff;
-            border-color: var(--green);
-            transform: translateY(-1px);
-        }
-
-        .tab-btn:nth-child(2).active {
-            background: var(--blue);
-            border-color: var(--blue);
-        }
-
-        .tab-btn:nth-child(3).active {
-            background: var(--amber);
-            border-color: var(--amber);
+            border-color: var(--accent);
         }
 
         .tab-content {
@@ -148,369 +77,48 @@
             display: block;
         }
 
-        /* CARDS */
-        .section-card {
-            background: var(--card);
-            border: 1px solid var(--line);
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            padding: 14px;
-            margin-bottom: 12px;
-        }
-
-        .section-title {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 10px;
-            margin-bottom: 12px;
-        }
-
-        .section-title h3 {
-            margin: 0;
-            font-size: 16px;
-        }
-
-        .count-badge {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            min-width: 34px;
-            height: 28px;
-            padding: 0 10px;
-            border-radius: 999px;
-            font-size: 13px;
-            font-weight: 800;
-            background: #f8fafc;
-            color: var(--muted);
-            border: 1px solid var(--line);
-        }
-
-        /* FORMS */
-        form {
-            margin: 0;
-        }
-
+        /* FORM GRID */
         .form-grid {
             display: grid;
             grid-template-columns: 1fr;
             gap: 10px;
         }
 
-        .field {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-
-        .field label {
-            font-size: 13px;
-            color: var(--muted);
-            font-weight: 700;
-        }
-
-        .field input,
-        .field textarea {
-            width: 100%;
-            border: 1px solid var(--line);
-            background: #fff;
-            border-radius: 14px;
-            padding: 12px 14px;
-            font-family: inherit;
-            font-size: 15px;
-            outline: none;
-            transition: border-color .15s ease, box-shadow .15s ease;
-        }
-
-        .field input:focus,
-        .field textarea:focus {
-            border-color: rgba(37, 99, 235, .45);
-            box-shadow: 0 0 0 4px rgba(37, 99, 235, .08);
-        }
-
-        .field textarea {
-            min-height: 96px;
-            resize: vertical;
-        }
-
         .field.span-2 {
             grid-column: 1 / -1;
         }
 
-        .submit-btn {
-            width: 100%;
-            border: none;
-            border-radius: 16px;
-            padding: 13px 16px;
-            margin-top: 12px;
-            font-family: inherit;
-            font-size: 15px;
-            font-weight: 800;
-            color: #fff;
-            background: linear-gradient(135deg, var(--green) 0%, #22c55e 100%);
-            box-shadow: 0 10px 25px rgba(22, 163, 74, .22);
-            cursor: pointer;
-            touch-action: manipulation;
-        }
-
-        .submit-btn.review {
-            background: linear-gradient(135deg, var(--blue) 0%, #3b82f6 100%);
-            box-shadow: 0 10px 25px rgba(37, 99, 235, .22);
-        }
-
-        /* LOGS */
-        .logs-wrap {
-            display: grid;
-            gap: 10px;
-        }
-
-        .log-item {
-            width: 100%;
-            text-align: right;
-            border: 1px solid var(--line);
-            background: #fff;
-            border-radius: 16px;
-            padding: 12px;
-            cursor: pointer;
-            box-shadow: 0 6px 18px rgba(15, 23, 42, .05);
-            transition: transform .15s ease, border-color .15s ease;
-            touch-action: manipulation;
-            font-family: inherit;
-        }
-
-        .log-item:active {
-            transform: scale(.99);
-        }
-
-        .log-top {
-            display: flex;
-            justify-content: space-between;
-            gap: 10px;
-            align-items: flex-start;
-            margin-bottom: 8px;
-        }
-
-        .log-title {
-            margin: 0;
-            font-size: 15px;
-            line-height: 1.5;
-            font-weight: 800;
-            color: var(--text);
-        }
-
-        .log-date {
-            font-size: 12px;
-            color: var(--muted);
-            white-space: nowrap;
-            background: #f8fafc;
-            border: 1px solid var(--line);
-            padding: 5px 8px;
-            border-radius: 999px;
-        }
-
-        .chips {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-        }
-
-        .chip {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 12px;
-            font-weight: 700;
-            border-radius: 999px;
-            padding: 6px 10px;
-            border: 1px solid transparent;
-        }
-
-        .chip.green {
-            background: var(--green-2);
-            color: #166534;
-            border-color: #bbf7d0;
-        }
-
-        .chip.blue {
-            background: var(--blue-2);
-            color: #1d4ed8;
-            border-color: #bfdbfe;
-        }
-
-        .chip.amber {
-            background: var(--amber-2);
-            color: #92400e;
-            border-color: #fde68a;
-        }
-
-        .chip.gray {
-            background: #f1f5f9;
-            color: #475569;
-            border-color: var(--line);
-        }
-
-        .empty-state {
-            padding: 14px;
+        /* POINTS */
+        .points-box {
+            background: var(--accent-strong);
+            color: white;
+            border-radius: var(--radius-lg);
+            padding: 22px;
             text-align: center;
-            color: var(--muted);
-            border: 1px dashed var(--line);
-            border-radius: 16px;
-            background: #fbfdff;
+            margin-bottom: 16px;
         }
 
-        /* MODAL */
-        .modal {
-            position: fixed;
-            inset: 0;
-            background: rgba(15, 23, 42, .55);
-            display: none;
-            align-items: flex-end;
-            justify-content: center;
-            z-index: 9999;
-            padding: 12px;
+        .points-value {
+            font-size: 38px;
+            font-weight: 900;
         }
 
-        .modal.open {
+        .points-label {
+            font-size: var(--text-sm);
+            opacity: .85;
+        }
+
+        .points-form {
             display: flex;
-        }
-
-        .modal-sheet {
-            width: 100%;
-            max-width: 620px;
-            background: #fff;
-            border-radius: 24px 24px 18px 18px;
-            box-shadow: 0 -10px 35px rgba(15, 23, 42, .22);
-            overflow: hidden;
-            animation: slideUp .18s ease-out;
-            max-height: 90vh;
-            display: flex;
-            flex-direction: column;
-        }
-
-        @keyframes slideUp {
-            from { transform: translateY(18px); opacity: .8; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-
-        .modal-handle {
-            width: 48px;
-            height: 5px;
-            border-radius: 999px;
-            background: #cbd5e1;
-            margin: 10px auto 0;
-        }
-
-        .modal-head {
-            display: flex;
-            align-items: flex-start;
-            justify-content: space-between;
-            gap: 12px;
-            padding: 16px;
-            border-bottom: 1px solid var(--line);
-        }
-
-        .modal-head h3 {
-            margin: 0 0 6px;
-            font-size: 18px;
-        }
-
-        .modal-sub {
-            color: var(--muted);
-            font-size: 13px;
-            line-height: 1.7;
-        }
-
-        .close-btn {
-            border: none;
-            background: #f1f5f9;
-            color: var(--text);
-            width: 38px;
-            height: 38px;
-            border-radius: 12px;
-            font-size: 18px;
-            cursor: pointer;
-            flex: 0 0 auto;
-        }
-
-        .modal-body {
-            padding: 16px;
-            overflow-y: auto;
-        }
-
-        .detail-list {
-            display: grid;
             gap: 10px;
         }
 
-        .detail-row {
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-            padding: 12px;
-            background: #f8fafc;
-            border: 1px solid var(--line);
-            border-radius: 14px;
-        }
-
-        .detail-label {
-            color: var(--muted);
-            font-size: 12px;
-            font-weight: 800;
-        }
-
-        .detail-value {
-            color: var(--text);
-            font-size: 15px;
-            font-weight: 700;
-            line-height: 1.7;
-            word-break: break-word;
-        }
-
-        .detail-value.muted {
-            color: var(--muted);
-            font-weight: 600;
-        }
-
-        .type-pill {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            width: fit-content;
-            padding: 7px 10px;
-            border-radius: 999px;
-            font-size: 12px;
-            font-weight: 800;
-            background: #eff6ff;
-            color: #1d4ed8;
-            border: 1px solid #bfdbfe;
-        }
-
-        .type-pill.green {
-            background: #ecfdf5;
-            color: #166534;
-            border-color: #bbf7d0;
-        }
-
-        .type-pill.amber {
-            background: #fffbeb;
-            color: #92400e;
-            border-color: #fde68a;
-        }
-
-        .hidden {
-            display: none !important;
+        .points-form input {
+            flex: 1;
         }
 
         /* MOBILE TWEAKS */
         @media (min-width: 640px) {
-            .page {
-                padding: 16px;
-            }
-
-            .header {
-                padding: 18px;
-            }
-
             .form-grid {
                 grid-template-columns: 1fr 1fr;
             }
@@ -520,7 +128,13 @@
             }
 
             .tab-btn {
-                min-width: 180px;
+                min-width: 170px;
+            }
+        }
+
+        @media (max-width: 550px) {
+            .points-form {
+                flex-direction: column;
             }
         }
     </style>
@@ -535,30 +149,32 @@
 
 <div class="page">
 
-    <a href="{{ route('dashboard') }}" class="back">⬅ العودة</a>
+    <a href="{{ route('dashboard') }}" class="back-link"><i class="fa-solid fa-arrow-right"></i> العودة</a>
 
-    <div class="header">
-        <h2>📘 متابعة الطالب</h2>
-        <p>👤 {{ $student->name }}</p>
-        <p>📞 {{ $student->phone_number ?? 'لا يوجد رقم' }}</p>
+    <div class="header card">
+        <h2 style="margin:0 0 8px; font-size: var(--text-xl); display:flex; align-items:center; gap:8px;">
+            <i class="fa-solid fa-book-open" style="color:var(--accent)"></i> متابعة الطالب
+        </h2>
+        <p><i class="fa-solid fa-user"></i> {{ $student->name }}</p>
+        <p><i class="fa-solid fa-phone"></i> {{ $student->phone_number ?? 'لا يوجد رقم' }}</p>
     </div>
 
     @if(session('success'))
-        <div class="flash">{{ session('success') }}</div>
+        <div class="flash"><i class="fa-solid fa-circle-check"></i> {{ session('success') }}</div>
     @endif
 
     <!-- TABS -->
     <div class="tabs">
-        <button class="tab-btn active" onclick="showTab('new', this)">📘 الحفظ الجديد</button>
-        <button class="tab-btn" onclick="showTab('review', this)">📊 المراجعة الكبرى</button>
-        <button class="tab-btn" onclick="showTab('points', this)">⭐ النقاط</button>
+        <button class="tab-btn active" onclick="showTab('new', this)"><i class="fa-solid fa-book-open"></i> الحفظ الجديد</button>
+        <button class="tab-btn" onclick="showTab('review', this)"><i class="fa-solid fa-rotate"></i> المراجعة الكبرى</button>
+        <button class="tab-btn" onclick="showTab('points', this)"><i class="fa-solid fa-star"></i> النقاط</button>
     </div>
 
     <!-- NEW MEMORIZATION -->
     <div id="new" class="tab-content active">
         <div class="section-card">
             <div class="section-title">
-                <h3>الحفظ الجديد</h3>
+                <span>الحفظ الجديد</span>
                 <span class="count-badge">{{ $memorizationLogs->count() }}</span>
             </div>
 
@@ -568,17 +184,37 @@
                 <div class="form-grid">
                     <div class="field span-2">
                         <label>السورة</label>
-                        <input type="text" name="surah" placeholder="مثال: البقرة" value="{{ old('surah') }}">
+                        <select name="surah" id="surah-select">
+                            <option value=""></option>
+                            @foreach($surahs as $surah)
+                                <option
+                                    value="{{ $surah['name'] }}"
+                                    data-number="{{ $surah['number'] }}"
+                                    data-ayahs="{{ $surah['ayahs'] }}"
+                                    @selected(old('surah') === $surah['name'])
+                                >{{ $surah['number'] }}. {{ $surah['name'] }}</option>
+                            @endforeach
+                        </select>
+                        <input type="hidden" name="surah_number" id="surah_number" value="{{ old('surah_number') }}">
+                        @error('surah')
+                            <div class="field-error">{{ $message }}</div>
+                        @enderror
                     </div>
 
                     <div class="field">
                         <label>من آية</label>
-                        <input type="number" name="from_ayah" placeholder="1" value="{{ old('from_ayah') }}">
+                        <select name="from_ayah" id="from-ayah-select" disabled></select>
+                        @error('from_ayah')
+                            <div class="field-error">{{ $message }}</div>
+                        @enderror
                     </div>
 
                     <div class="field">
                         <label>إلى آية</label>
-                        <input type="number" name="to_ayah" placeholder="5" value="{{ old('to_ayah') }}">
+                        <select name="to_ayah" id="to-ayah-select" disabled></select>
+                        @error('to_ayah')
+                            <div class="field-error">{{ $message }}</div>
+                        @enderror
                     </div>
 
                     <div class="field">
@@ -612,13 +248,15 @@
                     </div>
                 </div>
 
-                <button type="submit" class="submit-btn">💾 حفظ الحفظ الجديد</button>
+                <button type="submit" class="btn btn-primary btn-block" style="margin-top:12px">
+                    <i class="fa-solid fa-floppy-disk"></i> حفظ الحفظ الجديد
+                </button>
             </form>
         </div>
 
         <div class="section-card">
             <div class="section-title">
-                <h3>سجل الحفظ الجديد</h3>
+                <span>سجل الحفظ الجديد</span>
                 <span class="count-badge">{{ $memorizationLogs->count() }}</span>
             </div>
 
@@ -637,22 +275,43 @@
                             'review_score' => $item->review_score,
                             'review_homework' => $item->review_homework,
                             'notes' => $item->notes,
+                            'failed' => $item->isFailed(),
                         ];
                     @endphp
 
                     <button type="button" class="log-item" data-log='@json($logData)'>
                         <div class="log-top">
-                            <p class="log-title">📖 {{ $item->surah ?? 'بدون سورة' }}</p>
+                            <p class="log-title"><i class="fa-solid fa-book"></i> {{ $item->surah ?? 'بدون سورة' }}</p>
                             <span class="log-date">{{ optional($item->created_at)->format('Y-m-d') }}</span>
                         </div>
 
                         <div class="chips">
-                            <span class="chip green">⭐ {{ $item->score ?? '-' }}</span>
-                            <span class="chip gray">من {{ $item->from_ayah ?? '-' }} إلى {{ $item->to_ayah ?? '-' }}</span>
-                            @if($item->homework)
-                                <span class="chip blue">📚 الواجب</span>
+                            @if($item->score !== null)
+                                <span class="chip {{ $item->isFailed() ? 'rose' : 'green' }}">
+                                    <i class="fa-solid {{ $item->isFailed() ? 'fa-circle-xmark' : 'fa-circle-check' }}"></i>
+                                    {{ $item->isFailed() ? 'راسب' : 'ناجح' }}
+                                </span>
                             @endif
+                            <span class="chip gray"><i class="fa-solid fa-star"></i> {{ $item->score ?? '-' }}</span>
+                            <span class="chip gray">من {{ $item->from_ayah ?? '-' }} إلى {{ $item->to_ayah ?? '-' }}</span>
                         </div>
+
+                        @if($item->homework || $item->notes)
+                            <div class="log-notes">
+                                @if($item->homework)
+                                    <div class="log-note">
+                                        <i class="fa-solid fa-book-open-reader"></i>
+                                        <span><span class="note-label">الواجب المنزلي</span>{{ $item->homework }}</span>
+                                    </div>
+                                @endif
+                                @if($item->notes)
+                                    <div class="log-note muted">
+                                        <i class="fa-solid fa-note-sticky"></i>
+                                        <span><span class="note-label">ملاحظات</span>{{ $item->notes }}</span>
+                                    </div>
+                                @endif
+                            </div>
+                        @endif
                     </button>
                 @empty
                     <div class="empty-state">لا يوجد تسجيلات للحفظ الجديد بعد.</div>
@@ -665,7 +324,7 @@
     <div id="review" class="tab-content">
         <div class="section-card">
             <div class="section-title">
-                <h3>المراجعة الكبرى</h3>
+                <span>المراجعة الكبرى</span>
                 <span class="count-badge">{{ $reviewLogs->count() }}</span>
             </div>
 
@@ -689,13 +348,15 @@
                     </div>
                 </div>
 
-                <button type="submit" class="submit-btn review">💾 حفظ المراجعة الكبرى</button>
+                <button type="submit" class="btn btn-info btn-block" style="margin-top:12px">
+                    <i class="fa-solid fa-floppy-disk"></i> حفظ المراجعة الكبرى
+                </button>
             </form>
         </div>
 
         <div class="section-card">
             <div class="section-title">
-                <h3>سجل المراجعة الكبرى</h3>
+                <span>سجل المراجعة الكبرى</span>
                 <span class="count-badge">{{ $reviewLogs->count() }}</span>
             </div>
 
@@ -713,16 +374,22 @@
 
                     <button type="button" class="log-item" data-log='@json($logData)'>
                         <div class="log-top">
-                            <p class="log-title">📗 {{ $item->weekly_memorization ?? 'بدون عنوان' }}</p>
+                            <p class="log-title"><i class="fa-solid fa-rotate"></i> {{ $item->weekly_memorization ?? 'بدون عنوان' }}</p>
                             <span class="log-date">{{ optional($item->created_at)->format('Y-m-d') }}</span>
                         </div>
 
                         <div class="chips">
-                            <span class="chip amber">⭐ {{ $item->score ?? '-' }}</span>
-                            @if($item->review_homework)
-                                <span class="chip gray">📝 واجب المراجعة</span>
-                            @endif
+                            <span class="chip amber"><i class="fa-solid fa-star"></i> {{ $item->score ?? '-' }}</span>
                         </div>
+
+                        @if($item->review_homework)
+                            <div class="log-notes">
+                                <div class="log-note">
+                                    <i class="fa-solid fa-file-lines"></i>
+                                    <span><span class="note-label">واجب المراجعة</span>{{ $item->review_homework }}</span>
+                                </div>
+                            </div>
+                        @endif
                     </button>
                 @empty
                     <div class="empty-state">لا يوجد تسجيلات للمراجعة الكبرى بعد.</div>
@@ -732,42 +399,28 @@
     </div>
 
     <!-- POINTS -->
-    <!-- POINTS -->
-
     <div id="points" class="tab-content">
         <div class="section-card">
 
             <div class="section-title">
-                <h3>النقاط</h3>
+                <span>النقاط</span>
             </div>
 
-            <!-- Current Points Display -->
             <div class="points-box">
-                <div class="points-value">
-                    {{ $student->points ?? 0 }}
-                </div>
+                <div class="points-value">{{ $student->points ?? 0 }}</div>
                 <div class="points-label">إجمالي النقاط</div>
             </div>
 
-            <!-- Add Points Form -->
             <form method="POST" action="{{ route('students.addPoints', $student->id) }}" class="points-form">
                 @csrf
-
-                <input type="number"
-                       name="points"
-                       placeholder="أضف نقاط..."
-                       min="1"
-                       required
-                       class="points-input">
-
-                <button type="submit" class="points-btn">
-                    ➕ إضافة نقاط
+                <input type="number" name="points" placeholder="أضف نقاط..." min="1" required>
+                <button type="submit" class="btn btn-primary">
+                    <i class="fa-solid fa-plus"></i> إضافة
                 </button>
             </form>
 
-            <!-- Subtract Points Button -->
-            <button type="button" class="points-btn points-btn-subtract" onclick="openSubtractPointsModal()">
-                ➖ خصم نقاط
+            <button type="button" class="btn btn-danger btn-block" style="margin-top:10px" onclick="openSubtractPointsModal()">
+                <i class="fa-solid fa-minus"></i> خصم نقاط
             </button>
 
         </div>
@@ -784,7 +437,7 @@
                     <h3>خصم نقاط</h3>
                     <div class="modal-sub">كم عدد النقاط التي تريد خصمها من الطالب؟</div>
                 </div>
-                <button type="button" class="close-btn" onclick="closeSubtractPointsModal()">✕</button>
+                <button type="button" class="modal-close" onclick="closeSubtractPointsModal()"><i class="fa-solid fa-xmark"></i></button>
             </div>
 
             <div class="modal-body">
@@ -796,86 +449,15 @@
                            placeholder="عدد النقاط المراد خصمها..."
                            min="1"
                            required
-                           class="points-input"
                            autofocus>
 
-                    <button type="submit" class="points-btn points-btn-subtract">
-                        ➖ خصم النقاط
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fa-solid fa-minus"></i> خصم
                     </button>
                 </form>
             </div>
         </div>
     </div>
-
-    <style>
-        .points-box {
-            background: linear-gradient(135deg, #146c43, #0b3a2a);
-            color: white;
-            border-radius: 16px;
-            padding: 25px;
-            text-align: center;
-            margin-bottom: 20px;
-            box-shadow: 0 10px 25px rgba(20,108,67,0.2);
-        }
-
-        .points-value {
-            font-size: 42px;
-            font-weight: 900;
-        }
-
-        .points-label {
-            font-size: 14px;
-            opacity: 0.9;
-        }
-
-        .points-form {
-            display: flex;
-            gap: 10px;
-        }
-
-        .points-input {
-            flex: 1;
-            padding: 12px;
-            border-radius: 10px;
-            border: 1px solid #ddd;
-            font-family: 'Cairo', sans-serif;
-            font-size: 14px;
-        }
-
-        .points-btn {
-            padding: 12px 16px;
-            border: none;
-            border-radius: 10px;
-            background: linear-gradient(135deg, #0b3a2a, #146c43);
-            color: white;
-            font-weight: bold;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-
-        .points-btn:hover {
-            transform: translateY(-2px);
-            filter: brightness(1.1);
-        }
-
-        .points-btn-subtract {
-            width: 100%;
-            margin-top: 12px;
-            background: linear-gradient(135deg, #9f1239, #e11d48);
-        }
-
-        /* Mobile */
-        @media (max-width: 550px) {
-            .points-form {
-                flex-direction: column;
-            }
-
-            .points-btn {
-                width: 100%;
-            }
-        }
-    </style>
-
 
 </div>
 
@@ -889,14 +471,133 @@
                 <h3 id="modal-title">تفاصيل السجل</h3>
                 <div class="modal-sub" id="modal-subtitle"></div>
             </div>
-            <button type="button" class="close-btn" onclick="closeModal()">✕</button>
+            <button type="button" class="modal-close" onclick="closeModal()"><i class="fa-solid fa-xmark"></i></button>
         </div>
 
         <div class="modal-body" id="modal-body"></div>
     </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/js/tom-select.complete.min.js"></script>
 <script>
+    (function () {
+        const QURAN_SURAHS = @json($surahs);
+
+        const surahSelectEl = document.getElementById('surah-select');
+        const surahNumberInput = document.getElementById('surah_number');
+        const fromSelectEl = document.getElementById('from-ayah-select');
+        const toSelectEl = document.getElementById('to-ayah-select');
+
+        if (!surahSelectEl || !fromSelectEl || !toSelectEl) return;
+
+        const MAX_AYAHS_IN_A_SURAH = 300; // أطول سورة (البقرة) 286 آية
+
+        function buildAyahOptions(count, min) {
+            const opts = [];
+            for (let i = (min || 1); i <= count; i++) {
+                opts.push({ value: String(i), text: String(i) });
+            }
+            return opts;
+        }
+
+        // كِلا حقلي الآيات يُنشآن فورًا (بمظهر Tom Select الموحّد) ويبقيان
+        // معطّلين حتى تُختار السورة، بدل التحوّل من/إلى select عادي كل مرة.
+        const tsFrom = new TomSelect(fromSelectEl, {
+            create: false,
+            placeholder: 'اختر السورة أولاً',
+            valueField: 'value',
+            labelField: 'text',
+            searchField: ['text'],
+            options: [],
+            maxOptions: MAX_AYAHS_IN_A_SURAH,
+            onChange: function (value) {
+                const fromVal = parseInt(value, 10) || 1;
+                rebuildToOptions(currentAyahCount, fromVal);
+            },
+        });
+        tsFrom.disable();
+
+        const tsTo = new TomSelect(toSelectEl, {
+            create: false,
+            placeholder: 'اختر السورة أولاً',
+            valueField: 'value',
+            labelField: 'text',
+            searchField: ['text'],
+            options: [],
+            maxOptions: MAX_AYAHS_IN_A_SURAH,
+        });
+        tsTo.disable();
+
+        let currentAyahCount = 0;
+
+        function rebuildToOptions(ayahCount, minFrom, presetTo) {
+            tsTo.clear(true);
+            tsTo.clearOptions();
+            tsTo.addOptions(buildAyahOptions(ayahCount, minFrom));
+            tsTo.refreshOptions(false);
+
+            if (presetTo && Number(presetTo) >= minFrom) {
+                tsTo.setValue(String(presetTo), true);
+            }
+        }
+
+        function populateAyahSelects(ayahCount, presetFrom, presetTo) {
+            currentAyahCount = ayahCount || 0;
+
+            tsFrom.clear(true);
+            tsFrom.clearOptions();
+            tsTo.clear(true);
+            tsTo.clearOptions();
+
+            if (!currentAyahCount) {
+                tsFrom.disable();
+                tsTo.disable();
+                tsFrom.control_input.placeholder = 'اختر السورة أولاً';
+                tsTo.control_input.placeholder = 'اختر السورة أولاً';
+                return;
+            }
+
+            tsFrom.addOptions(buildAyahOptions(currentAyahCount));
+            tsFrom.refreshOptions(false);
+            tsFrom.enable();
+            tsTo.enable();
+            tsFrom.control_input.placeholder = 'من آية';
+            tsTo.control_input.placeholder = 'إلى آية';
+
+            const initialFrom = presetFrom || 1;
+            rebuildToOptions(currentAyahCount, initialFrom, presetTo);
+
+            if (presetFrom) {
+                tsFrom.setValue(String(presetFrom), true);
+            }
+        }
+
+        const tsSurah = new TomSelect(surahSelectEl, {
+            create: false,
+            placeholder: 'ابحث عن السورة...',
+            maxOptions: 114,
+            onChange: function (value) {
+                const opt = QURAN_SURAHS.find(s => s.name === value);
+                surahNumberInput.value = opt ? opt.number : '';
+                populateAyahSelects(opt ? opt.ayahs : 0);
+            },
+        });
+
+        // إعادة بناء الحالة بعد فشل التحقق من الصحة (old())
+        const oldSurah = @json(old('surah'));
+        const oldFrom = @json(old('from_ayah'));
+        const oldTo = @json(old('to_ayah'));
+
+        if (oldSurah) {
+            const opt = QURAN_SURAHS.find(s => s.name === oldSurah);
+            if (opt) {
+                tsSurah.setValue(oldSurah, true);
+                surahNumberInput.value = opt.number;
+                populateAyahSelects(opt.ayahs, oldFrom, oldTo);
+            }
+        }
+    })();
+
     function showTab(tab, el) {
         document.querySelectorAll('.tab-content').forEach(e => e.classList.remove('active'));
         document.querySelectorAll('.tab-btn').forEach(e => e.classList.remove('active'));
@@ -942,16 +643,18 @@
         }
 
         title.innerHTML = `<span class="${pillClass}">${escapeHtml(typeLabel)}</span>`;
-        subtitle.textContent = item.created_at ? `📅 ${item.created_at}` : '';
+        subtitle.innerHTML = item.created_at ? `<i class="fa-solid fa-calendar-days"></i> ${escapeHtml(item.created_at)}` : '';
 
         let content = `<div class="detail-list">`;
         content += detailRow('تاريخ الإنشاء', item.created_at ?? '-');
 
         if (item.type === 'memorization') {
+            const hasScore = item.score !== null && item.score !== undefined && item.score !== '';
             content += detailRow('السورة', item.surah);
             content += detailRow('من آية', item.from_ayah);
             content += detailRow('إلى آية', item.to_ayah);
             content += detailRow('العلامة', item.score);
+            content += detailRow('الحالة', hasScore ? (item.failed ? 'راسب — غير محتسب ضمن نسبة الحفظ' : 'ناجح') : '-');
             content += detailRow('الواجب المنزلي', item.homework);
             content += detailRow('المراجعة اليومية', item.daily_review);
             content += detailRow('علامة المراجعة', item.review_score);

@@ -10,63 +10,55 @@
     <title>تسجيل الحضور</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link rel="stylesheet" href="{{ asset('css/theme.css') }}">
 
     <style>
-        :root {
-            --primary-gradient: linear-gradient(135deg, #0b3a2a, #146c43);
-            --primary-color: #146c43;
-            --primary-dark: #0b3a2a;
-            --bg-gradient: linear-gradient(135deg, #f4f7f5, #e8efe9);
-            --text-main: #1e2922;
-            --radius-lg: 20px;
-            --radius-md: 12px;
-            --shadow-sm: 0 4px 6px rgba(0, 0, 0, 0.04);
-            --shadow-md: 0 10px 25px rgba(20, 108, 67, 0.08);
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Cairo', sans-serif;
-        }
-
         body {
-            background: var(--bg-gradient);
-            min-height: 100vh;
-            padding: 30px 12px;
+            padding: 24px 12px 40px;
         }
 
         h2 {
             text-align: center;
-            margin-bottom: 20px;
+            margin: 0 0 20px;
             font-weight: 800;
-            color: var(--primary-dark);
+            color: var(--ink);
+            font-size: var(--text-xl);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
 
-        form {
-            max-width: 800px;
-            margin: auto;
-            background: white;
-            padding: 20px;
+        h2 i {
+            color: var(--accent);
+        }
+
+        form.attendance-form {
+            max-width: 760px;
+            margin: 0 auto;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            padding: 18px;
             border-radius: var(--radius-lg);
-            box-shadow: var(--shadow-md);
+            box-shadow: var(--shadow-xs);
         }
 
         .row {
-            background: #fff;
-            padding: 14px;
-            border-radius: var(--radius-md);
-            margin-bottom: 12px;
-            box-shadow: var(--shadow-sm);
+            background: var(--surface);
+            padding: 12px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            margin-bottom: 10px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap;
         }
 
-        .name {
-            font-weight: bold;
-            font-size: 16px;
+        .row .name {
+            font-weight: 700;
+            font-size: var(--text-base);
         }
 
         .actions {
@@ -78,50 +70,47 @@
             display: none;
         }
 
-        .label {
+        .status-label {
             padding: 8px 14px;
-            border-radius: 8px;
+            border-radius: var(--radius-sm);
             cursor: pointer;
-            font-weight: bold;
-            font-size: 13px;
+            font-weight: 700;
+            font-size: var(--text-xs);
+            background: var(--paper);
+            color: var(--ink-muted);
+            border: 1px solid transparent;
         }
 
-        .present { background: #dcfce7; color: #16a34a; }
-        .absent { background: #fee2e2; color: #dc2626; }
-        .late { background: #fef3c7; color: #d97706; }
+        .status-label.present { background: var(--accent-soft); color: var(--accent-strong); }
+        .status-label.late { background: var(--warning-soft); color: #92400E; }
 
-        input[value="حاضر"]:checked + .present {
-            background: #16a34a;
-            color: white;
+        input[value="حاضر"]:checked + .status-label.present {
+            background: var(--accent);
+            color: #fff;
         }
 
-        input[value="متأخر"]:checked + .late {
-            background: #d97706;
-            color: white;
+        input[value="متأخر"]:checked + .status-label.late {
+            background: var(--warning);
+            color: #fff;
         }
 
         .absent-toggle {
             border: none;
-            width: auto;
-            margin-top: 0;
+            font-family: inherit;
         }
 
         .absent-toggle.active {
-            background: #dc2626;
+            background: var(--danger);
             color: white;
-        }
-
-        .row {
-            flex-wrap: wrap;
         }
 
         .absence-menu {
             width: 100%;
             margin-top: 12px;
             padding: 12px;
-            background: #fff7f7;
-            border: 1px solid #fee2e2;
-            border-radius: var(--radius-md);
+            background: var(--danger-soft);
+            border: 1px solid #FECACA;
+            border-radius: var(--radius);
             display: none;
         }
 
@@ -131,7 +120,7 @@
 
         .absence-options {
             display: flex;
-            gap: 16px;
+            gap: 12px;
             flex-wrap: wrap;
             margin-bottom: 10px;
         }
@@ -141,26 +130,23 @@
             align-items: center;
             gap: 6px;
             font-weight: 600;
-            font-size: 14px;
+            font-size: var(--text-sm);
             cursor: pointer;
             padding: 6px 10px;
-            border-radius: 8px;
-            background: #f1f5f9;
-            color: #64748b;
+            border-radius: var(--radius-sm);
+            background: var(--surface);
+            color: var(--ink-muted);
+            border: 1px solid var(--border);
         }
 
         .absence-options label:has(input:checked) {
-            background: #dc2626;
+            background: var(--danger);
             color: white;
+            border-color: var(--danger);
         }
 
         .reason-input {
             width: 100%;
-            padding: 10px 12px;
-            border: 1px solid #ddd;
-            border-radius: var(--radius-md);
-            font-family: 'Cairo', sans-serif;
-            font-size: 14px;
             display: none;
         }
 
@@ -168,16 +154,9 @@
             display: block;
         }
 
-        button {
-            width: 100%;
-            margin-top: 20px;
-            padding: 12px;
-            border: none;
-            border-radius: 10px;
-            background: var(--primary-gradient);
-            color: white;
-            font-weight: bold;
-            cursor: pointer;
+        .submit-row {
+            max-width: 760px;
+            margin: 16px auto 0;
         }
 
         /* MOBILE */
@@ -194,34 +173,40 @@
                 grid-template-columns: repeat(3, 1fr);
             }
 
-            .label {
+            .status-label,
+            .absent-toggle {
                 text-align: center;
                 width: 100%;
                 padding: 10px 0;
             }
         }
+
         .top-bar {
-            max-width: 800px;
-            margin: 0 auto 10px;
+            max-width: 760px;
+            margin: 0 auto 14px;
             display: flex;
-            justify-content: flex-start; /* RTL → right side */
+            justify-content: flex-start;
         }
 
-        .back-btn {
-            background: white;
-            padding: 8px 14px;
-            border-radius: 10px;
-            text-decoration: none;
-            color: var(--primary-dark);
-            font-weight: 700;
-            box-shadow: var(--shadow-sm);
-            transition: all 0.25s ease;
-            border: 1px solid rgba(0,0,0,0.05);
+        .today-date {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            max-width: 760px;
+            margin: 0 auto 20px;
+            padding: 10px 18px;
+            background: var(--accent-soft);
+            color: var(--accent-strong);
+            border: 1px solid #CDECDA;
+            border-radius: var(--radius-full);
+            font-weight: 800;
+            font-size: var(--text-sm);
+            width: fit-content;
         }
 
-        .back-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-md);
+        .today-date i {
+            font-size: var(--text-xs);
         }
     </style>
 
@@ -230,13 +215,15 @@
 
 <body>
 <div class="top-bar">
-    <a href="{{ url()->previous() }}" class="back-btn">
-        ← رجوع
+    <a href="{{ url()->previous() }}" class="back-link">
+        <i class="fa-solid fa-arrow-right"></i> رجوع
     </a>
 </div>
-<h2>📅 تسجيل حضور الطلاب</h2>
+<h2><i class="fa-solid fa-calendar-days"></i> تسجيل حضور الطلاب</h2>
 
-<form method="POST" action="{{ route('attendance.store') }}">
+<div class="today-date"><i class="fa-solid fa-calendar-day"></i> {{ $todayLabel }}</div>
+
+<form class="attendance-form" method="POST" action="{{ route('attendance.store') }}">
     @csrf
 
 
@@ -260,13 +247,13 @@
                            id="p{{ $student->id }}"
                         {{ $status == 'حاضر' ? 'checked' : '' }}
                            onchange="onAttendanceChange({{ $student->id }})">
-                    <label class="label present" for="p{{ $student->id }}">حاضر</label>
+                    <label class="status-label present" for="p{{ $student->id }}">حاضر</label>
 
                     <button type="button"
-                            class="label absent absent-toggle {{ $isAbsent ? 'active' : '' }}"
+                            class="status-label absent-toggle {{ $isAbsent ? 'active' : '' }}"
                             id="toggle{{ $student->id }}"
                             onclick="toggleAbsenceMenu({{ $student->id }})">
-                        غائب ▾
+                        غائب <i class="fa-solid fa-chevron-down" style="font-size: 10px;"></i>
                     </button>
 
                     <input type="radio"
@@ -275,7 +262,7 @@
                            id="l{{ $student->id }}"
                         {{ $status == 'متأخر' ? 'checked' : '' }}
                            onchange="onAttendanceChange({{ $student->id }})">
-                    <label class="label late" for="l{{ $student->id }}">متأخر</label>
+                    <label class="status-label late" for="l{{ $student->id }}">متأخر</label>
 
                 </div>
 
@@ -313,11 +300,11 @@
         @endforeach
     </div>
 
-    <button type="submit">
-        💾 حفظ قائمة الحضور
-    </button>
-
-
+    <div class="submit-row">
+        <button type="submit" class="btn btn-primary btn-block">
+            <i class="fa-solid fa-floppy-disk"></i> حفظ قائمة الحضور
+        </button>
+    </div>
 </form>
 
 <script>

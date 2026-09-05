@@ -8,17 +8,12 @@
     <title>تعديل الطالب</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link rel="stylesheet" href="{{ asset('css/theme.css') }}">
+    <link href="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/css/tom-select.css" rel="stylesheet">
 
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Cairo', sans-serif;
-        }
-
         body {
-            background: linear-gradient(135deg, #f4f7f6, #eef5f1);
             min-height: 100vh;
             display: flex;
             justify-content: center;
@@ -26,100 +21,44 @@
             padding: 20px;
         }
 
-        /* CARD */
         .card {
-            width: 420px;
-            background: white;
-            padding: 25px;
-            border-radius: 22px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, .08);
-            animation: fade .4s ease-in-out;
-        }
-
-        @keyframes fade {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            width: 100%;
+            max-width: 420px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            padding: 28px;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-sm);
         }
 
         h2 {
             text-align: center;
-            color: #198754;
-            font-weight: 900;
-            margin-bottom: 20px;
-        }
-
-        /* INPUTS */
-        label {
-            font-weight: 700;
-            color: #0f3d2e;
-            display: block;
-            margin-bottom: 6px;
-        }
-
-        input {
-            width: 100%;
-            padding: 12px;
-            border-radius: 12px;
-            border: 1px solid #ddd;
-            outline: none;
-            margin-bottom: 15px;
-            transition: .3s;
-        }
-
-        input:focus {
-            border-color: #198754;
-            box-shadow: 0 0 0 4px rgba(25, 135, 84, .1);
-        }
-
-        /* BUTTON */
-        button {
-            width: 100%;
-            padding: 14px;
-            border: none;
-            border-radius: 12px;
-            background: linear-gradient(135deg, #198754, #0f3d2e);
-            color: white;
+            color: var(--ink);
             font-weight: 800;
-            cursor: pointer;
-            transition: .3s;
-        }
-
-        button:hover {
-            transform: translateY(-3px);
-        }
-
-        /* BACK */
-        .back {
-            display: block;
-            text-align: center;
-            margin-top: 12px;
-            color: #666;
-            text-decoration: none;
-            font-weight: 700;
-        }
-
-        .back:hover {
-            color: #198754;
-        }
-
-        .avatar {
-            width: 70px;
-            height: 70px;
-            background: #198754;
-            border-radius: 50%;
+            font-size: var(--text-xl);
+            margin: 0 0 22px;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
-            font-size: 24px;
-            margin: 0 auto 15px;
+            gap: 8px;
+        }
+
+        h2 i {
+            color: var(--accent);
+        }
+
+        .back {
+            display: block;
+            text-align: center;
+            margin-top: 14px;
+            color: var(--ink-muted);
+            text-decoration: none;
+            font-weight: 700;
+            font-size: var(--text-sm);
+        }
+
+        .back:hover {
+            color: var(--accent);
         }
     </style>
 
@@ -129,28 +68,68 @@
 
     <div class="card">
 
-        <div class="avatar">👦</div>
-
-        <h2>تعديل بيانات الطالب</h2>
+        <h2><i class="fa-solid fa-pen"></i> تعديل بيانات الطالب</h2>
 
         <form method="POST" action="{{ route('student.update', $student->id) }}">
 
             @csrf
             @method('PUT')
 
-            <label>اسم الطالب</label>
-            <input type="text" name="name" value="{{ $student->name }}" required>
+            <div class="field">
+                <label>اسم الطالب</label>
+                <input type="text" name="name" value="{{ old('name', $student->name) }}" required>
+                @error('name')
+                    <div class="field-error">{{ $message }}</div>
+                @enderror
+            </div>
 
-            <label>رقم الهاتف</label>
-            <input type="text" name="phone_number" value="{{ $student->phone_number }}">
+            <div class="field">
+                <label>ولي الأمر</label>
+                <select name="parent_id" id="parent-select">
+                    <option value=""></option>
+                    @foreach($parents as $parent)
+                        <option value="{{ $parent->id }}" @selected(old('parent_id', $student->parent_id) == $parent->id)>{{ $parent->name }} — {{ $parent->phone }}</option>
+                    @endforeach
+                </select>
+                @error('parent_id')
+                    <div class="field-error">{{ $message }}</div>
+                @enderror
+            </div>
 
-            <button type="submit">💾 حفظ التعديلات</button>
+            <div class="field">
+                <label>الصف</label>
+                <input type="text" name="grade" value="{{ old('grade', $student->grade) }}">
+                @error('grade')
+                    <div class="field-error">{{ $message }}</div>
+                @enderror
+            </div>
+
+            <div class="field">
+                <label>عنوان السكن</label>
+                <input type="text" name="address" value="{{ old('address', $student->address) }}">
+                @error('address')
+                    <div class="field-error">{{ $message }}</div>
+                @enderror
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block">
+                <i class="fa-solid fa-floppy-disk"></i> حفظ التعديلات
+            </button>
 
         </form>
 
-        <a href="{{ route('dashboard') }}" class="back">⬅ الرجوع للوحة التحكم</a>
+        <a href="{{ route('dashboard') }}" class="back"><i class="fa-solid fa-arrow-right"></i> الرجوع للوحة التحكم</a>
 
     </div>
+
+<script src="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/js/tom-select.complete.min.js"></script>
+<script>
+    new TomSelect('#parent-select', {
+        create: false,
+        placeholder: 'ابحث عن ولي الأمر بالاسم أو رقم الهاتف...',
+        maxOptions: 1000,
+    });
+</script>
 
 </body>
 

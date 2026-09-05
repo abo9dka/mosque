@@ -10,136 +10,76 @@
 
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link rel="stylesheet" href="{{ asset('css/theme.css') }}">
 
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Cairo', sans-serif;
-        }
-
         body {
             height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            background: linear-gradient(-45deg, #0d3b2e, #14532d, #1e6b46, #123524);
-            background-size: 400% 400%;
-            animation: bg 12s ease infinite;
+            padding: 20px;
         }
 
-        @keyframes bg {
-            0% {
-                background-position: 0% 50%;
-            }
-
-            50% {
-                background-position: 100% 50%;
-            }
-
-            100% {
-                background-position: 0% 50%;
-            }
-        }
-
-        /* CARD */
         .card {
-            width: 420px;
-            padding: 40px;
-            border-radius: 25px;
-            background: rgba(255, 255, 255, 0.12);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.35);
-            animation: show .7s ease;
+            width: 100%;
+            max-width: 380px;
+            padding: 36px 32px;
+            border-radius: var(--radius-lg);
+            background: var(--surface);
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-sm);
         }
 
-        @keyframes show {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* LOGO */
-        .logo {
-            font-size: 50px;
-            text-align: center;
-            margin-bottom: 10px;
+        .logo-mark {
+            width: 56px;
+            height: 56px;
+            border-radius: var(--radius);
+            background: var(--accent-soft);
+            color: var(--accent-strong);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin: 0 auto 18px;
         }
 
         h2 {
             text-align: center;
-            color: white;
+            color: var(--ink);
             font-weight: 800;
+            font-size: var(--text-xl);
+            margin: 0 0 6px;
         }
 
         .subtitle {
             text-align: center;
-            color: #d8e6df;
-            margin-bottom: 25px;
+            color: var(--ink-muted);
+            font-size: var(--text-sm);
+            margin-bottom: 26px;
         }
 
-        /* INPUT */
         .input-group {
             position: relative;
-            margin-bottom: 18px;
+            margin-bottom: 14px;
         }
 
         .input-group i {
             position: absolute;
-            right: 15px;
+            right: 14px;
             top: 50%;
             transform: translateY(-50%);
-            color: #1e6b46;
-        }
-
-        input {
-            width: 100%;
-            padding: 14px 45px 14px 15px;
-            border: none;
-            outline: none;
-            border-radius: 12px;
-            font-size: 15px;
-            transition: .2s;
-        }
-
-        input:focus {
-            transform: scale(1.02);
-            box-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
-        }
-
-        /* BUTTON */
-        button {
-            width: 100%;
-            padding: 14px;
-            border: none;
-            border-radius: 12px;
-            font-weight: 800;
-            font-size: 16px;
-            cursor: pointer;
-            background: linear-gradient(135deg, #d4af37, #ffd700);
-            transition: .3s;
-        }
-
-        button:hover {
-            transform: translateY(-3px);
-        }
-
-        /* ERROR */
-        .error {
-            background: #ffe5e5;
-            color: #c00;
-            padding: 10px;
-            border-radius: 10px;
-            margin-bottom: 15px;
+            color: var(--ink-faint);
             font-size: 14px;
+        }
+
+        .input-group input {
+            padding-right: 40px;
+        }
+
+        button[type="submit"] {
+            width: 100%;
+            margin-top: 8px;
         }
     </style>
 
@@ -149,14 +89,14 @@
 
     <div class="card">
 
-        <div class="logo">🕌</div>
+        <div class="logo-mark"><i class="fa-solid fa-mosque"></i></div>
 
         <h2>تسجيل الدخول</h2>
 
         <div class="subtitle">نظام إدارة حلقات المسجد</div>
 
         @if($errors->any())
-        <div class="error">
+        <div class="error-box">
             @foreach($errors->all() as $error)
             <div>{{ $error }}</div>
             @endforeach
@@ -186,7 +126,7 @@
                     required>
             </div>
 
-            <button>دخول</button>
+            <button type="submit" class="btn btn-primary">دخول</button>
 
         </form>
 

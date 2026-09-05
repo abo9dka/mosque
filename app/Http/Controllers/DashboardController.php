@@ -18,7 +18,7 @@ class DashboardController extends Controller
         $filter = $request->query('filter');
 
         // استعلام الطلاب الخاص بالمستخدم الحالي
-        $query = Student::where('user_id', auth()->id());
+        $query = Student::where('user_id', auth()->id())->with('parent');
 
         // تطبيق الفلترة
         if (in_array($filter, [
@@ -69,8 +69,21 @@ class DashboardController extends Controller
             ->get()
             ->keyBy('student_id'); // مهم جدًا
 
-        return view('attendance', compact('students', 'attendanceLogs', 'today'));
+        $todayLabel = $this->arabicDateLabel(Carbon::parse($today));
 
+        return view('attendance', compact('students', 'attendanceLogs', 'today', 'todayLabel'));
+
+    }
+
+    private function arabicDateLabel(Carbon $date): string
+    {
+        $dayNames = ['الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
+        $monthNames = [
+            1 => 'يناير', 2 => 'فبراير', 3 => 'مارس', 4 => 'أبريل', 5 => 'مايو', 6 => 'يونيو',
+            7 => 'يوليو', 8 => 'أغسطس', 9 => 'سبتمبر', 10 => 'أكتوبر', 11 => 'نوفمبر', 12 => 'ديسمبر',
+        ];
+
+        return $dayNames[$date->dayOfWeek] . '، ' . $date->day . ' ' . $monthNames[$date->month];
     }
 
 
