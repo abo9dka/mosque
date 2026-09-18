@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>تعديل ولي أمر</title>
+    <title>تعديل نشاط</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
@@ -21,7 +21,7 @@
 
         .card {
             width: 100%;
-            max-width: 420px;
+            max-width: 440px;
         }
 
         h2 {
@@ -58,29 +58,34 @@
 <body>
 
     <div class="card">
-        <h2><i class="fa-solid fa-pen"></i> تعديل بيانات ولي الأمر</h2>
+        <h2><i class="fa-solid fa-pen"></i> تعديل النشاط</h2>
 
-        <form method="POST" action="{{ route('admin.parents.update', $parent->id) }}">
+        <form method="POST" action="{{ route('admin.activities.update', $activity->id) }}">
             @csrf
             @method('PUT')
 
             <div class="field">
-                <label>اسم ولي الأمر</label>
-                <input type="text" name="name" value="{{ old('name', $parent->name) }}" required>
-                @error('name')<div class="field-error">{{ $message }}</div>@enderror
+                <label>اسم النشاط</label>
+                <input type="text" name="title" value="{{ old('title', $activity->title) }}" required>
+                @error('title')<div class="field-error">{{ $message }}</div>@enderror
             </div>
 
             <div class="field">
-                <label>رقم الهاتف</label>
-                <input type="text" name="phone" value="{{ old('phone', $parent->phone) }}" inputmode="numeric" required>
-                @error('phone')<div class="field-error">{{ $message }}</div>@enderror
+                <label>تفاصيل النشاط (اختياري)</label>
+                <textarea name="description" placeholder="أي تفاصيل إضافية عن النشاط...">{{ old('description', $activity->description) }}</textarea>
+                @error('description')<div class="field-error">{{ $message }}</div>@enderror
             </div>
 
             <div class="field">
-                <label>كلمة مرور جديدة</label>
-                <input type="text" name="password" placeholder="اتركه فارغاً للإبقاء على كلمة المرور الحالية">
-                <div class="field-hint">اتركه فارغاً إن كنت لا تريد تغيير كلمة المرور</div>
-                @error('password')<div class="field-error">{{ $message }}</div>@enderror
+                <label>تاريخ النشاط</label>
+                <input type="date" name="date" value="{{ old('date', $activity->date->format('Y-m-d')) }}" required>
+                @error('date')<div class="field-error">{{ $message }}</div>@enderror
+            </div>
+
+            <div class="field">
+                <label>عدد الطلاب المشتركين</label>
+                <input type="number" name="students_count" min="0" value="{{ old('students_count', $activity->students_count) }}" required>
+                @error('students_count')<div class="field-error">{{ $message }}</div>@enderror
             </div>
 
             <button type="submit" class="btn btn-primary btn-block">
@@ -88,7 +93,7 @@
             </button>
         </form>
 
-        <a href="{{ route('admin.parents.index') }}" class="back"><i class="fa-solid fa-arrow-right"></i> الرجوع للقائمة</a>
+        <a href="{{ route('admin.activities.index') }}" class="back"><i class="fa-solid fa-arrow-right"></i> الرجوع للقائمة</a>
     </div>
 
 </body>

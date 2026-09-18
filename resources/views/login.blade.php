@@ -11,37 +11,44 @@
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
     <link rel="stylesheet" href="{{ asset('css/theme.css') }}">
+    <link rel="icon" type="image/png" href="{{ asset('images/favicon-256.png') }}">
 
     <style>
         body {
-            height: 100vh;
+            min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 20px;
+            padding: 24px;
+            background:
+                radial-gradient(circle at 18% 15%, rgba(188, 171, 123, .10) 0%, transparent 45%),
+                radial-gradient(circle at 85% 90%, rgba(188, 171, 123, .08) 0%, transparent 40%),
+                linear-gradient(160deg, #1c3c34 0%, var(--accent-strong) 55%, #0d211c 100%);
+        }
+
+        .login-wrap {
+            width: 100%;
+            max-width: 380px;
+        }
+
+        .brand {
+            text-align: center;
+            margin-bottom: 22px;
+        }
+
+        .brand img {
+            width: 148px;
+            max-width: 60%;
+            height: auto;
         }
 
         .card {
             width: 100%;
-            max-width: 380px;
             padding: 36px 32px;
             border-radius: var(--radius-lg);
             background: var(--surface);
             border: 1px solid var(--border);
-            box-shadow: var(--shadow-sm);
-        }
-
-        .logo-mark {
-            width: 56px;
-            height: 56px;
-            border-radius: var(--radius);
-            background: var(--accent-soft);
-            color: var(--accent-strong);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            margin: 0 auto 18px;
+            box-shadow: 0 20px 45px rgba(0, 0, 0, .25);
         }
 
         h2 {
@@ -87,48 +94,54 @@
 
 <body>
 
-    <div class="card">
+    <div class="login-wrap">
 
-        <div class="logo-mark"><i class="fa-solid fa-mosque"></i></div>
-
-        <h2>تسجيل الدخول</h2>
-
-        <div class="subtitle">نظام إدارة حلقات المسجد</div>
-
-        @if($errors->any())
-        <div class="error-box">
-            @foreach($errors->all() as $error)
-            <div>{{ $error }}</div>
-            @endforeach
+        <div class="brand">
+            <img src="{{ asset('images/logo-full.png') }}" alt="معهد اقرأ وارتقِ لحفظ القرآن الكريم وتعليمه">
         </div>
-        @endif
 
-        <form method="POST" action="{{ url('/login') }}" autocomplete="off">
+        <div class="card">
 
-            @csrf
+            <h2>تسجيل الدخول</h2>
 
-            <div class="input-group">
-                <i class="fa-solid fa-phone"></i>
-                <input type="text"
-                    name="phone"
-                    placeholder="رقم الهاتف"
-                    autocomplete="off"
-                    inputmode="numeric"
-                    required>
+            <div class="subtitle">نظام إدارة حلقات المسجد</div>
+
+            @if($errors->any())
+            <div class="error-box">
+                @foreach($errors->all() as $error)
+                <div>{{ $error }}</div>
+                @endforeach
             </div>
+            @endif
 
-            <div class="input-group">
-                <i class="fa-solid fa-lock"></i>
-                <input type="password"
-                    name="password"
-                    placeholder="كلمة المرور"
-                    autocomplete="new-password"
-                    required>
-            </div>
+            <form method="POST" action="{{ url('/login') }}" autocomplete="off">
 
-            <button type="submit" class="btn btn-primary">دخول</button>
+                @csrf
 
-        </form>
+                <div class="input-group">
+                    <i class="fa-solid fa-phone"></i>
+                    <input type="text"
+                        name="phone"
+                        placeholder="رقم الهاتف"
+                        autocomplete="off"
+                        inputmode="numeric"
+                        required>
+                </div>
+
+                <div class="input-group">
+                    <i class="fa-solid fa-lock"></i>
+                    <input type="password"
+                        name="password"
+                        placeholder="كلمة المرور"
+                        autocomplete="new-password"
+                        required>
+                </div>
+
+                <button type="submit" class="btn btn-primary">دخول</button>
+
+            </form>
+
+        </div>
 
     </div>
 

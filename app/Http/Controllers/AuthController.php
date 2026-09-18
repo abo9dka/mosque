@@ -28,7 +28,7 @@ class AuthController extends Controller
             $request->session()->regenerate();
 
             return match (Auth::user()->role) {
-                'admin' => redirect()->intended(route('admin.parents.index')),
+                'admin' => redirect()->intended(route('admin.dashboard')),
                 'parent' => redirect()->intended(route('parent.dashboard')),
                 default => redirect()->intended(route('dashboard')),
             };

@@ -1,9 +1,9 @@
 @php
-    $title = $title ?? 'نظام المسجد';
+    $title =  'اقْرَأْ وَارْتَقِ';
 @endphp
 <div class="navbar">
     <div class="logo">
-        <i class="fa-solid fa-mosque"></i>
+        <img src="{{ asset('images/logo-icon.png') }}" alt="شعار المعهد">
         <span>{{ $title }}</span>
     </div>
     <div class="user-box">

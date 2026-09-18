@@ -2,79 +2,81 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AttendanceLog;
+use App\Models\ProgressLog;
+use App\Models\Student;
 use App\Models\User;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\Rule;
+use App\Support\QuranProgress;
+use Carbon\Carbon;
 
 class AdminController extends Controller
 {
-    public function index()
+    public function dashboard()
     {
-        $parents = User::where('role', 'parent')
-            ->withCount('children')
-            ->orderBy('name')
+        $totalTeachers = User::where('role', 'teacher')->count();
+        $totalParents = User::where('role', 'parent')->count();
+        $totalStudents = Student::count();
+        $studentsWithParent = Student::whereNotNull('parent_id')->count();
+
+        $today = Carbon::today()->toDateString();
+        $weekStart = Carbon::now()->startOfWeek(Carbon::SATURDAY);
+        $weekEnd = Carbon::now()->endOfWeek(Carbon::FRIDAY);
+
+        $todayAttendance = AttendanceLog::where('date', $today)
+            ->selectRaw('status, count(*) as total')
+            ->groupBy('status')
+            ->pluck('total', 'status');
+
+        $weekAttendance = AttendanceLog::whereBetween('date', [$weekStart->toDateString(), $weekEnd->toDateString()])
+            ->selectRaw('status, count(*) as total')
+            ->groupBy('status')
+            ->pluck('total', 'status');
+
+        $weekMemorizationLogs = ProgressLog::where('type', 'memorization')
+            ->whereBetween('created_at', [$weekStart, $weekEnd])
             ->get();
 
-        return view('admin.parents.index', compact('parents'));
-    }
+        $weekLoggedCount = $weekMemorizationLogs->count();
+        $weekFailedCount = $weekMemorizationLogs->filter(fn ($log) => $log->isFailed())->count();
+        $weekPassedCount = $weekMemorizationLogs->filter(fn ($log) => $log->score !== null && !$log->isFailed())->count();
 
-    public function create()
-    {
-        return view('admin.parents.create');
-    }
+        $students = Student::with('teacher')->get();
 
-    public function store(Request $request)
-    {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'phone' => 'required|string|max:255|unique:users,phone',
-            'password' => 'required|string|min:4',
+        $completionByStudent = $students->map(function ($student) {
+            $progress = QuranProgress::forStudent($student);
+
+            return [
+                'student' => $student,
+                'percent' => $progress['percent'],
+                'memorized' => $progress['memorized'],
+            ];
+        });
+
+        $avgCompletion = $completionByStudent->isEmpty() ? 0.0 : round($completionByStudent->avg('percent'), 1);
+
+        $topByCompletion = $completionByStudent->sortByDesc('percent')->take(5)->values();
+
+        $topByPoints = $students->sortByDesc('points')->take(5)->values();
+
+        $teacherLoads = User::where('role', 'teacher')
+            ->withCount('students')
+            ->orderByDesc('students_count')
+            ->get();
+
+        return view('admin.dashboard', [
+            'totalTeachers' => $totalTeachers,
+            'totalParents' => $totalParents,
+            'totalStudents' => $totalStudents,
+            'studentsWithParent' => $studentsWithParent,
+            'todayAttendance' => $todayAttendance,
+            'weekAttendance' => $weekAttendance,
+            'weekLoggedCount' => $weekLoggedCount,
+            'weekPassedCount' => $weekPassedCount,
+            'weekFailedCount' => $weekFailedCount,
+            'avgCompletion' => $avgCompletion,
+            'topByCompletion' => $topByCompletion,
+            'topByPoints' => $topByPoints,
+            'teacherLoads' => $teacherLoads,
         ]);
-
-        User::create([
-            'name' => $validated['name'],
-            'phone' => $validated['phone'],
-            'password' => Hash::make($validated['password']),
-            'role' => 'parent',
-        ]);
-
-        return redirect()->route('admin.parents.index')->with('success', '✅ تم إنشاء حساب ولي الأمر بنجاح');
-    }
-
-    public function edit($id)
-    {
-        $parent = User::where('role', 'parent')->findOrFail($id);
-
-        return view('admin.parents.edit', compact('parent'));
-    }
-
-    public function update(Request $request, $id)
-    {
-        $parent = User::where('role', 'parent')->findOrFail($id);
-
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'phone' => ['required', 'string', 'max:255', Rule::unique('users', 'phone')->ignore($parent->id)],
-            'password' => 'nullable|string|min:4',
-        ]);
-
-        $parent->name = $validated['name'];
-        $parent->phone = $validated['phone'];
-
-        if (!empty($validated['password'])) {
-            $parent->password = Hash::make($validated['password']);
-        }
-
-        $parent->save();
-
-        return redirect()->route('admin.parents.index')->with('success', '✅ تم تحديث بيانات ولي الأمر');
-    }
-
-    public function destroy($id)
-    {
-        User::where('role', 'parent')->where('id', $id)->delete();
-
-        return redirect()->route('admin.parents.index')->with('success', '🗑️ تم حذف حساب ولي الأمر');
     }
 }

@@ -8,6 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
     <link rel="stylesheet" href="{{ asset('css/theme.css') }}">
+    <link rel="icon" type="image/png" href="{{ asset('images/favicon-256.png') }}">
 
     <style>
         .page-title {
@@ -64,9 +65,9 @@
             display: inline-flex;
             align-items: center;
             gap: 5px;
-            background: var(--warning-soft);
-            color: #92400e;
-            border: 1px solid #fde68a;
+            background: var(--gold-soft);
+            color: var(--gold-strong);
+            border: 1px solid var(--gold);
             padding: 6px 12px;
             border-radius: var(--radius-full);
             font-weight: 800;
@@ -96,6 +97,8 @@
     @include('partials.navbar')
 
     <div class="page">
+        @include('partials.today-schedule')
+
         <h2 class="page-title"><i class="fa-solid fa-users"></i> أبناؤكم</h2>
 
         @if($children->isEmpty())

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\AttendanceLog;
 use App\Models\ProgressLog;
+use App\Models\ScheduleItem;
 use App\Support\QuranProgress;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -32,7 +33,9 @@ class ParentDashboardController extends Controller
                 ->pluck('total', 'status');
         });
 
-        return view('parent.dashboard', compact('children'));
+        $todayScheduleItems = ScheduleItem::forDay(Carbon::now()->dayOfWeek)->get();
+
+        return view('parent.dashboard', compact('children', 'todayScheduleItems'));
     }
 
     public function show($id)

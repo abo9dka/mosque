@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>تعديل ولي أمر</title>
+    <title>إضافة أستاذ</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
@@ -19,17 +19,22 @@
             padding: 20px;
         }
 
-        .card {
+        .box {
             width: 100%;
-            max-width: 420px;
+            max-width: 400px;
+            padding: 32px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-sm);
         }
 
         h2 {
             text-align: center;
+            margin: 0 0 24px;
             color: var(--ink);
             font-weight: 800;
             font-size: var(--text-xl);
-            margin: 0 0 22px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -57,38 +62,36 @@
 </head>
 <body>
 
-    <div class="card">
-        <h2><i class="fa-solid fa-pen"></i> تعديل بيانات ولي الأمر</h2>
+    <div class="box">
+        <h2><i class="fa-solid fa-user-plus"></i> إضافة أستاذ</h2>
 
-        <form method="POST" action="{{ route('admin.parents.update', $parent->id) }}">
+        <form method="POST" action="{{ route('admin.teachers.store') }}">
             @csrf
-            @method('PUT')
 
             <div class="field">
-                <label>اسم ولي الأمر</label>
-                <input type="text" name="name" value="{{ old('name', $parent->name) }}" required>
+                <label>اسم الأستاذ</label>
+                <input type="text" name="name" value="{{ old('name') }}" required>
                 @error('name')<div class="field-error">{{ $message }}</div>@enderror
             </div>
 
             <div class="field">
                 <label>رقم الهاتف</label>
-                <input type="text" name="phone" value="{{ old('phone', $parent->phone) }}" inputmode="numeric" required>
+                <input type="text" name="phone" value="{{ old('phone') }}" inputmode="numeric" required>
                 @error('phone')<div class="field-error">{{ $message }}</div>@enderror
             </div>
 
             <div class="field">
-                <label>كلمة مرور جديدة</label>
-                <input type="text" name="password" placeholder="اتركه فارغاً للإبقاء على كلمة المرور الحالية">
-                <div class="field-hint">اتركه فارغاً إن كنت لا تريد تغيير كلمة المرور</div>
+                <label>كلمة المرور</label>
+                <input type="text" name="password" required>
                 @error('password')<div class="field-error">{{ $message }}</div>@enderror
             </div>
 
             <button type="submit" class="btn btn-primary btn-block">
-                <i class="fa-solid fa-floppy-disk"></i> حفظ التعديلات
+                <i class="fa-solid fa-floppy-disk"></i> حفظ الحساب
             </button>
         </form>
 
-        <a href="{{ route('admin.parents.index') }}" class="back"><i class="fa-solid fa-arrow-right"></i> الرجوع للقائمة</a>
+        <a href="{{ route('admin.teachers.index') }}" class="back"><i class="fa-solid fa-arrow-right"></i> الرجوع للقائمة</a>
     </div>
 
 </body>

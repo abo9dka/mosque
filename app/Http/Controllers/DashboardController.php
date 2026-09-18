@@ -6,7 +6,9 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\AttendanceLog;
+use App\Models\ScheduleItem;
 use App\Models\Student;
+use App\Support\ArabicDate;
 
 class DashboardController extends Controller
 {
@@ -51,11 +53,14 @@ class DashboardController extends Controller
             ->where('status', AttendanceLog::STATUS_LATE)
             ->count();
 
+        $todayScheduleItems = ScheduleItem::forDay(Carbon::now()->dayOfWeek)->get();
+
         return view('dashboard', compact(
             'students',
             'presentCount',
             'absentCount',
-            'lateCount'
+            'lateCount',
+            'todayScheduleItems'
         ));
     }
     public function showAttendance()
@@ -69,21 +74,10 @@ class DashboardController extends Controller
             ->get()
             ->keyBy('student_id'); // مهم جدًا
 
-        $todayLabel = $this->arabicDateLabel(Carbon::parse($today));
+        $todayLabel = ArabicDate::label(Carbon::parse($today));
 
         return view('attendance', compact('students', 'attendanceLogs', 'today', 'todayLabel'));
 
-    }
-
-    private function arabicDateLabel(Carbon $date): string
-    {
-        $dayNames = ['الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
-        $monthNames = [
-            1 => 'يناير', 2 => 'فبراير', 3 => 'مارس', 4 => 'أبريل', 5 => 'مايو', 6 => 'يونيو',
-            7 => 'يوليو', 8 => 'أغسطس', 9 => 'سبتمبر', 10 => 'أكتوبر', 11 => 'نوفمبر', 12 => 'ديسمبر',
-        ];
-
-        return $dayNames[$date->dayOfWeek] . '، ' . $date->day . ' ' . $monthNames[$date->month];
     }
 
 
