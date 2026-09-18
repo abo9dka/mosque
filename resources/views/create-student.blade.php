@@ -8,183 +8,50 @@
     <title>إضافة طالب</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link rel="stylesheet" href="{{ asset('css/theme.css') }}">
+    <link rel="icon" type="image/png" href="{{ asset('images/favicon-256.png') }}">
+    <link href="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/css/tom-select.css" rel="stylesheet">
 
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Cairo', sans-serif;
-        }
-
         body {
             min-height: 100vh;
-
             display: flex;
             justify-content: center;
             align-items: center;
-
             padding: 20px;
-
-            background: radial-gradient(circle at top left, #0f3d2e, transparent 40%),
-            radial-gradient(circle at bottom right, #198754, transparent 40%),
-            linear-gradient(135deg, #0b1f17, #f4f7f6);
-
-            position: relative;
-
-            overflow-x: hidden; /* ✅ FIX */
-        }
-
-        /* glowing blobs */
-        body::before,
-        body::after {
-            content: "";
-            position: absolute;
-            border-radius: 50%;
-            filter: blur(80px);
-            z-index: 0;
-            pointer-events: none;
-
-            max-width: 100vw; /* ✅ CRITICAL */
-        }
-
-        body::before {
-            width: 400px;
-            height: 400px;
-            background: rgba(25, 135, 84, 0.35);
-            top: -100px;
-            left: -120px;
-        }
-
-        body::after {
-            width: 450px;
-            height: 450px;
-            background: rgba(13, 110, 253, 0.25);
-            bottom: -150px;
-            right: -150px;
-        }
-
-        /* BOX */
-        .box {
-            position: relative;
-            z-index: 1;
-
-            width: 100%;
-            max-width: 400px;
-            padding: 40px;
-
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(18px);
-
-            border-radius: 25px;
-
-            box-shadow:
-                0 25px 60px rgba(0, 0, 0, 0.25),
-                inset 0 1px 0 rgba(255, 255, 255, 0.4);
-
-            animation: pop .5s ease;
-        }
-        .box {
-            width: 100%;          /* ✅ instead of 400px */
-            max-width: 400px;     /* ✅ keeps design */
-        }
-        /* TITLE */
-        h2 {
-            text-align: center;
-            margin-bottom: 25px;
-            color: #0f3d2e;
-            font-weight: 900;
-            font-size: 28px;
-            letter-spacing: 1px;
-        }
-
-        /* INPUT */
-        input {
-            width: 100%;
-            padding: 14px 15px;
-            margin-bottom: 15px;
-
-            border: 1px solid rgba(0, 0, 0, 0.08);
-            border-radius: 14px;
-
-            outline: none;
-            font-size: 14px;
-
-            transition: .3s;
-
-            background: rgba(255, 255, 255, 0.7);
-        }
-
-        input:focus {
-            border-color: #198754;
-            box-shadow: 0 0 0 4px rgba(25, 135, 84, 0.15);
-            transform: translateY(-2px);
-        }
-
-        /* BUTTON */
-        button {
-            width: 100%;
-            padding: 14px;
-
-            border: none;
-            border-radius: 14px;
-
-            background: linear-gradient(135deg, #198754, #0f3d2e);
-            color: #fff;
-
-            font-weight: 900;
-            font-size: 15px;
-
-            cursor: pointer;
-            transition: .3s;
-
-            box-shadow: 0 10px 25px rgba(25, 135, 84, 0.25);
-        }
-
-        button:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 15px 35px rgba(25, 135, 84, 0.35);
-        }
-        html, body {
-            max-width: 100%;
-            overflow-x: hidden;
-        }
-        /* animation */
-        @keyframes pop {
-            from {
-                opacity: 0;
-                transform: scale(0.9);
-            }
-
-            to {
-                opacity: 1;
-                transform: scale(1);
-            }
         }
 
         .top-bar {
             position: absolute;
             top: 20px;
-            right: 20px; /* RTL → right side */
-            z-index: 2;
+            right: 20px;
         }
 
-        .back-btn {
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(10px);
-            padding: 8px 16px;
-            border-radius: 12px;
-            text-decoration: none;
-            color: #0f3d2e;
+        .box {
+            width: 100%;
+            max-width: 400px;
+            padding: 32px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-sm);
+        }
+
+        h2 {
+            text-align: center;
+            margin: 0 0 24px;
+            color: var(--ink);
             font-weight: 800;
-            font-size: 14px;
-            box-shadow: 0 6px 20px rgba(0,0,0,0.1);
-            transition: all 0.25s ease;
+            font-size: var(--text-xl);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
 
-        .back-btn:hover {
-            transform: translateY(-2px);
-            background: white;
+        h2 i {
+            color: var(--accent);
         }
     </style>
 
@@ -192,31 +59,71 @@
 
 <body>
 <div class="top-bar">
-    <a href="{{ url()->previous() }}" class="back-btn">
-        ← رجوع
+    <a href="{{ url()->previous() }}" class="back-link">
+        <i class="fa-solid fa-arrow-right"></i> رجوع
     </a>
 </div>
     <div class="box">
 
-        <h2>➕ إضافة طالب</h2>
+        <h2><i class="fa-solid fa-user-plus"></i> إضافة طالب</h2>
 
         <form method="POST" action="{{ route('student.store') }}">
 
             @csrf
 
-            <input type="text" name="name" placeholder="اسم الطالب" required>
+            <div class="field">
+                <label>اسم الطالب</label>
+                <input type="text" name="name" placeholder="اسم الطالب" value="{{ old('name') }}" required>
+                @error('name')
+                    <div class="field-error">{{ $message }}</div>
+                @enderror
+            </div>
 
-            <input type="text" name="phone_number" placeholder="رقم الهاتف">
+            <div class="field">
+                <label>ولي الأمر</label>
+                <select name="parent_id" id="parent-select">
+                    <option value=""></option>
+                    @foreach($parents as $parent)
+                        <option value="{{ $parent->id }}" @selected(old('parent_id') == $parent->id)>{{ $parent->name }} — {{ $parent->phone }}</option>
+                    @endforeach
+                </select>
+                @error('parent_id')
+                    <div class="field-error">{{ $message }}</div>
+                @enderror
+            </div>
 
-            <input type="text" name="grade" placeholder="الصف (كرقم حصرا)">
+            <div class="field">
+                <label>الصف</label>
+                <input type="text" name="grade" placeholder="الصف (كرقم حصرا)" value="{{ old('grade') }}">
+                @error('grade')
+                    <div class="field-error">{{ $message }}</div>
+                @enderror
+            </div>
 
-            <input type="text" name="address" placeholder="عنوان السكن">
+            <div class="field">
+                <label>عنوان السكن</label>
+                <input type="text" name="address" placeholder="عنوان السكن" value="{{ old('address') }}">
+                @error('address')
+                    <div class="field-error">{{ $message }}</div>
+                @enderror
+            </div>
 
-            <button type="submit">💾 حفظ الطالب</button>
+            <button type="submit" class="btn btn-primary btn-block">
+                <i class="fa-solid fa-floppy-disk"></i> حفظ الطالب
+            </button>
 
         </form>
 
     </div>
+
+<script src="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/js/tom-select.complete.min.js"></script>
+<script>
+    new TomSelect('#parent-select', {
+        create: false,
+        placeholder: 'ابحث عن ولي الأمر بالاسم أو رقم الهاتف...',
+        maxOptions: 1000,
+    });
+</script>
 
 </body>
 

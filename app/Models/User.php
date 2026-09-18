@@ -18,6 +18,27 @@ class User extends Authenticatable
     {
         return $this->hasMany(Student::class);
     }
+
+    public function children()
+    {
+        return $this->hasMany(Student::class, 'parent_id');
+    }
+
+    public function isTeacher(): bool
+    {
+        return $this->role === 'teacher';
+    }
+
+    public function isAdmin(): bool
+    {
+        return $this->role === 'admin';
+    }
+
+    public function isParent(): bool
+    {
+        return $this->role === 'parent';
+    }
+
     /**
      * The attributes that are mass assignable.
      *
@@ -28,6 +49,7 @@ class User extends Authenticatable
         'email',
         'password',
         'phone',
+        'role',
     ];
 
     /**

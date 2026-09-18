@@ -6,7 +6,9 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\AttendanceLog;
+use App\Models\ScheduleItem;
 use App\Models\Student;
+use App\Support\ArabicDate;
 
 class DashboardController extends Controller
 {
@@ -18,7 +20,7 @@ class DashboardController extends Controller
         $filter = $request->query('filter');
 
         // استعلام الطلاب الخاص بالمستخدم الحالي
-        $query = Student::where('user_id', auth()->id());
+        $query = Student::where('user_id', auth()->id())->with('parent');
 
         // تطبيق الفلترة
         if (in_array($filter, [
@@ -51,11 +53,14 @@ class DashboardController extends Controller
             ->where('status', AttendanceLog::STATUS_LATE)
             ->count();
 
+        $todayScheduleItems = ScheduleItem::forDay(Carbon::now()->dayOfWeek)->get();
+
         return view('dashboard', compact(
             'students',
             'presentCount',
             'absentCount',
-            'lateCount'
+            'lateCount',
+            'todayScheduleItems'
         ));
     }
     public function showAttendance()
@@ -69,7 +74,9 @@ class DashboardController extends Controller
             ->get()
             ->keyBy('student_id'); // مهم جدًا
 
-        return view('attendance', compact('students', 'attendanceLogs', 'today'));
+        $todayLabel = ArabicDate::label(Carbon::parse($today));
+
+        return view('attendance', compact('students', 'attendanceLogs', 'today', 'todayLabel'));
 
     }
 

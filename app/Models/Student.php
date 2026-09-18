@@ -6,11 +6,16 @@ use Illuminate\Database\Eloquent\Model;
 
 class Student extends Model
 {
-    protected $fillable = ['user_id', 'name', 'phone_number'];
+    protected $fillable = ['user_id', 'parent_id', 'name', 'phone_number', 'grade', 'address'];
 
     public function teacher()
     {
         return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function parent()
+    {
+        return $this->belongsTo(User::class, 'parent_id');
     }
 
     public function progressLogs()
